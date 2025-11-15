@@ -1,0 +1,42 @@
+# Backend
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/.idea/
+backend/*.iml
+backend/.vscode/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.DS_Store
+
+# Logs
+*.log
+backend.log
+frontend.log
+
+# Database (data files - not the schema)
+**/interview-tracker/data/*.db
+**/interview-tracker/data/*.mv.db
+**/interview-tracker/data/*.trace.db
+
+# Uploads and backups (user data)
+**/interview-tracker/uploads/
+**/interview-tracker/backups/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
