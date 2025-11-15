@@ -11,7 +11,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "topics")
@@ -66,6 +68,24 @@ public abstract class Topic {
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<FileMetadata> files = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "topic_dependencies",
+        joinColumns = @JoinColumn(name = "topic_id"),
+        inverseJoinColumns = @JoinColumn(name = "prerequisite_id")
+    )
+    private Set<Topic> prerequisites = new HashSet<>();
+
+    @ManyToMany(mappedBy = "prerequisites", fetch = FetchType.LAZY)
+    private Set<Topic> dependentTopics = new HashSet<>();
+
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ConfidenceHistory> confidenceHistory = new ArrayList<>();
+
+    @Column
+    private Boolean decayDisabled = false;
 
     /**
      * Calculated field: Total time spent across all practice sessions
