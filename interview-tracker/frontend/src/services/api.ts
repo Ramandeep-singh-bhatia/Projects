@@ -92,3 +92,65 @@ export const dataService = {
   backup: () => api.post('/data/backup'),
   getStorageInfo: () => api.get('/data/storage-info'),
 };
+
+// Phase 2: Dependency Services
+export const dependencyService = {
+  addPrerequisite: (topicId: number, prerequisiteId: number) =>
+    api.post(`/dependencies/topics/${topicId}/prerequisites/${prerequisiteId}`),
+  removePrerequisite: (topicId: number, prerequisiteId: number) =>
+    api.delete(`/dependencies/topics/${topicId}/prerequisites/${prerequisiteId}`),
+  getPrerequisites: (topicId: number) => api.get(`/dependencies/topics/${topicId}/prerequisites`),
+  getDependents: (topicId: number) => api.get(`/dependencies/topics/${topicId}/dependents`),
+  getLearningPath: (topicId: number) => api.get(`/dependencies/topics/${topicId}/learning-path`),
+  getBlockedTopics: () => api.get('/dependencies/blocked'),
+  validateNonCircular: (topicId: number, prerequisiteId: number) =>
+    api.post('/dependencies/validate', { topicId, prerequisiteId }),
+  getReadyTopics: () => api.get('/dependencies/ready-topics'),
+  getNextLogicalTopic: () => api.get('/dependencies/next-logical-topic'),
+  importPrerequisites: (data: any) => api.post('/dependencies/import', data),
+};
+
+// Phase 2: Confidence Decay Services
+export const confidenceService = {
+  applyDecay: () => api.post('/confidence/apply-decay'),
+  getHistory: (topicId: number) => api.get(`/confidence/history/${topicId}`),
+  getDecayPreview: () => api.get('/confidence/decay-preview'),
+};
+
+// Phase 2: Study Plan Services
+export const studyPlanService = {
+  generate: (params: any) => api.post('/study-plan/generate', params),
+  getActive: () => api.get('/study-plan/active'),
+  getAll: () => api.get('/study-plan'),
+  getById: (id: number) => api.get(`/study-plan/${id}`),
+  markItemComplete: (itemId: number, actualMinutes: number) =>
+    api.post(`/study-plan/items/${itemId}/complete`, { actualMinutes }),
+  delete: (id: number) => api.delete(`/study-plan/${id}`),
+};
+
+// Phase 2: Mock Interview Services
+export const mockInterviewService = {
+  start: (params: any) => api.post('/mock-interview/start', params),
+  complete: (id: number, assessment: any) => api.post(`/mock-interview/${id}/complete`, assessment),
+  getAll: () => api.get('/mock-interview'),
+  getById: (id: number) => api.get(`/mock-interview/${id}`),
+  getAnalytics: () => api.get('/mock-interview/analytics'),
+  delete: (id: number) => api.delete(`/mock-interview/${id}`),
+};
+
+// Phase 2: Pomodoro Services
+export const pomodoroService = {
+  start: (params: any) => api.post('/pomodoro/start', params),
+  getActive: () => api.get('/pomodoro/active'),
+  complete: (id: number) => api.post(`/pomodoro/${id}/complete`),
+  stop: (id: number) => api.post(`/pomodoro/${id}/stop`),
+  logSession: (id: number, data: any) => api.post(`/pomodoro/${id}/log-session`, data),
+  getStats: () => api.get('/pomodoro/stats'),
+  getHistory: (limit: number = 50) => api.get(`/pomodoro/history?limit=${limit}`),
+  getByTopic: (topicId: number) => api.get(`/pomodoro/topic/${topicId}`),
+};
+
+// Phase 2: Enhanced Analytics Services
+export const enhancedAnalyticsService = {
+  get: () => api.get('/analytics/enhanced'),
+};
