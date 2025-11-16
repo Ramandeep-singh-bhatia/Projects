@@ -282,3 +282,112 @@ export interface EnhancedAnalytics {
   successRateByCategory: Record<string, number>;
   learningVelocity: number;
 }
+
+// Phase 3 Types
+
+export enum FileCategory {
+  NOTES = 'NOTES',
+  REFERENCES = 'REFERENCES',
+  SOLUTIONS = 'SOLUTIONS',
+  PRACTICE_PROBLEMS = 'PRACTICE_PROBLEMS',
+  DIAGRAMS = 'DIAGRAMS',
+  CODE_SAMPLES = 'CODE_SAMPLES',
+  OTHER = 'OTHER',
+}
+
+export enum CalibrationType {
+  QUICK_VERIFY = 'QUICK_VERIFY',
+  PROBLEM = 'PROBLEM',
+  EXPLANATION = 'EXPLANATION',
+  QUIZ = 'QUIZ',
+}
+
+export enum DependencyStrength {
+  STRONG = 'STRONG',
+  MEDIUM = 'MEDIUM',
+  WEAK = 'WEAK',
+}
+
+export interface Flashcard {
+  id?: number;
+  front: string;
+  back: string;
+  difficulty?: DifficultyLevel;
+  category?: string;
+  tags?: string[];
+  sourceTopic?: Topic;
+  // Spaced Repetition fields
+  easeFactor?: number;
+  interval?: number;
+  repetitions?: number;
+  nextReviewDate?: string;
+  reviewCount?: number;
+  successCount?: number;
+  createdDate?: string;
+  lastModifiedDate?: string;
+  lastReviewedDate?: string;
+  archived?: boolean;
+}
+
+export interface CalibrationCheck {
+  id?: number;
+  topic: Topic;
+  checkDate: string;
+  confidenceBefore: number;
+  confidenceAfter?: number;
+  type: CalibrationType;
+  passed?: boolean;
+  userResponse?: string;
+  notes?: string;
+}
+
+export interface VoiceNote {
+  id?: number;
+  topic?: Topic;
+  session?: PracticeSession;
+  audioFilePath?: string;
+  duration?: number;
+  fileSize?: number;
+  transcription?: string;
+  transcribed?: boolean;
+  recordedDate?: string;
+  title?: string;
+  summary?: string;
+  tags?: string[];
+}
+
+export interface TopicDependency {
+  id?: number;
+  topic: Topic;
+  prerequisite: Topic;
+  strength: DependencyStrength;
+}
+
+export interface BackupInfo {
+  fileName: string;
+  filePath: string;
+  fileSize: number;
+  createdDate: string;
+}
+
+export interface FlashcardStats {
+  totalFlashcards: number;
+  activeFlashcards: number;
+  flashcardsDueToday: number;
+  averageSuccessRate: number;
+  masteredCards: number;
+}
+
+export interface VoiceNoteStats {
+  totalVoiceNotes: number;
+  totalDuration: number;
+  totalFileSize: number;
+  averageDuration: number;
+  transcribedCount: number;
+}
+
+export interface CalibrationAccuracy {
+  totalCalibrations: number;
+  passRate: number;
+  averageConfidenceChange: number;
+}

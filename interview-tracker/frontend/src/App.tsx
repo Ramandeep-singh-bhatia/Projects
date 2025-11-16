@@ -9,6 +9,9 @@ import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
 import StudyPlanPage from './pages/StudyPlanPage';
 import MockInterviewPage from './pages/MockInterviewPage';
+import FlashcardsPage from './pages/FlashcardsPage';
+import FlashcardReviewPage from './pages/FlashcardReviewPage';
+import VoiceNotesPage from './pages/VoiceNotesPage';
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
           <Route path="behavioral" element={<BehavioralPage />} />
           <Route path="study-plan" element={<StudyPlanPage />} />
           <Route path="mock-interview" element={<MockInterviewPage />} />
+          <Route path="flashcards" element={<FlashcardsPage />} />
+          <Route path="flashcards/review" element={<FlashcardReviewPage />} />
+          <Route path="voice-notes" element={<VoiceNotesPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>

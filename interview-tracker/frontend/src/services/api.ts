@@ -154,3 +154,60 @@ export const pomodoroService = {
 export const enhancedAnalyticsService = {
   get: () => api.get('/analytics/enhanced'),
 };
+
+// Phase 3: Flashcard Services
+export const flashcardService = {
+  create: (flashcard: any) => api.post('/flashcards', flashcard),
+  getAll: (activeOnly?: boolean) => api.get(`/flashcards${activeOnly ? '?activeOnly=true' : ''}`),
+  getById: (id: number) => api.get(`/flashcards/${id}`),
+  update: (id: number, flashcard: any) => api.put(`/flashcards/${id}`, flashcard),
+  delete: (id: number) => api.delete(`/flashcards/${id}`),
+  archive: (id: number) => api.post(`/flashcards/${id}/archive`),
+  getDue: () => api.get('/flashcards/due'),
+  getNext: () => api.get('/flashcards/next'),
+  submitReview: (id: number, quality: number) => api.post(`/flashcards/${id}/review`, { quality }),
+  getByTopic: (topicId: number) => api.get(`/flashcards/by-topic/${topicId}`),
+  getByCategory: (category: string) => api.get(`/flashcards/by-category?category=${category}`),
+  search: (q: string) => api.get(`/flashcards/search?q=${q}`),
+  getAnalytics: () => api.get('/flashcards/analytics'),
+  generateFromTopic: (topicId: number) => api.post(`/flashcards/generate/${topicId}`),
+  bulkCreate: (flashcards: any[]) => api.post('/flashcards/bulk-create', flashcards),
+};
+
+// Phase 3: Calibration Services
+export const calibrationService = {
+  getPendingTopics: () => api.get('/calibration/pending-topics'),
+  trigger: (topicId: number, type: string) => api.post(`/calibration/trigger/${topicId}?type=${type}`),
+  complete: (id: number, data: any) => api.post(`/calibration/${id}/complete`, data),
+  getPending: () => api.get('/calibration/pending'),
+  getHistory: (topicId: number) => api.get(`/calibration/history/${topicId}`),
+  getAccuracy: () => api.get('/calibration/accuracy'),
+};
+
+// Phase 3: Voice Note Services
+export const voiceNoteService = {
+  record: (formData: FormData) => api.post('/voice-notes/record', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  getById: (id: number) => api.get(`/voice-notes/${id}`),
+  getAll: () => api.get('/voice-notes'),
+  getByTopic: (topicId: number) => api.get(`/voice-notes/topic/${topicId}`),
+  update: (id: number, voiceNote: any) => api.put(`/voice-notes/${id}`, voiceNote),
+  delete: (id: number) => api.delete(`/voice-notes/${id}`),
+  downloadAudio: (id: number) => api.get(`/voice-notes/${id}/audio`, { responseType: 'blob' }),
+  updateTranscription: (id: number, transcription: string) =>
+    api.put(`/voice-notes/${id}/transcription`, { transcription }),
+  search: (q: string) => api.get(`/voice-notes/search?q=${q}`),
+  getAnalytics: () => api.get('/voice-notes/analytics'),
+  appendToNotes: (id: number) => api.post(`/voice-notes/${id}/to-notes`),
+};
+
+// Phase 3: Backup Services
+export const backupService = {
+  create: () => api.post('/backup/create'),
+  list: () => api.get('/backup/list'),
+  download: (fileName: string) => api.get(`/backup/${fileName}/download`, { responseType: 'blob' }),
+  delete: (fileName: string) => api.delete(`/backup/${fileName}`),
+  verify: (fileName: string) => api.post(`/backup/${fileName}/verify`),
+  getStats: () => api.get('/backup/stats'),
+};
