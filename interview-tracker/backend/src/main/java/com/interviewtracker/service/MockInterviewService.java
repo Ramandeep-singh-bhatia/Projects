@@ -135,7 +135,7 @@ public class MockInterviewService {
             topics.sort(Comparator.comparingInt(t ->
                 categoryCount.getOrDefault(t.getCategory(), 0)));
 
-            Topic selected Topic = topics.get(random.nextInt(Math.min(3, topics.size())));
+            Topic selectedTopic = topics.get(random.nextInt(Math.min(3, topics.size())));
             selected.add(selectedTopic);
             topics.remove(selectedTopic);
             categoryCount.merge(selectedTopic.getCategory(), 1, Integer::sum);
