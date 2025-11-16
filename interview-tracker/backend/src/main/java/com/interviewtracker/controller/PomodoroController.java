@@ -21,7 +21,7 @@ public class PomodoroController {
     private PomodoroService pomodoroService;
 
     @PostMapping("/start")
-    public ResponseEntity<Pomodoro> start Pomodoro(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Pomodoro> startPomodoro(@RequestBody Map<String, Object> request) {
         Long topicId = request.get("topicId") != null ? ((Number) request.get("topicId")).longValue() : null;
         String phaseStr = (String) request.get("phase");
         PomodoroPhase phase = PomodoroPhase.valueOf(phaseStr);
