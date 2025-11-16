@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
-import { settingsService, dataService } from '../services/api';
-import { Settings, WeekStartDay } from '../types';
+import { settingsService, dataService, backupService } from '../services/api';
+import { Settings, WeekStartDay, BackupInfo } from '../types';
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [storageInfo, setStorageInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [backups, setBackups] = useState<BackupInfo[]>([]);
+  const [loadingBackups, setLoadingBackups] = useState(false);
 
   useEffect(() => {
     loadSettings();
     loadStorageInfo();
+    loadBackups();
   }, []);
 
   const loadSettings = async () => {
@@ -103,9 +106,74 @@ const SettingsPage = () => {
       await dataService.backup();
       alert('Backup created successfully!');
       loadStorageInfo();
+      loadBackups();
     } catch (error) {
       console.error('Error creating backup:', error);
       alert('Failed to create backup');
+    }
+  };
+
+  // Phase 3: Backup Management
+  const loadBackups = async () => {
+    setLoadingBackups(true);
+    try {
+      const response = await backupService.list();
+      setBackups(response.data);
+    } catch (error) {
+      console.error('Error loading backups:', error);
+    } finally {
+      setLoadingBackups(false);
+    }
+  };
+
+  const handleCreateBackup = async () => {
+    try {
+      await backupService.create();
+      alert('Backup created successfully!');
+      loadBackups();
+    } catch (error) {
+      console.error('Error creating backup:', error);
+      alert('Failed to create backup');
+    }
+  };
+
+  const handleDownloadBackup = async (fileName: string) => {
+    try {
+      const response = await backupService.download(fileName);
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Error downloading backup:', error);
+      alert('Failed to download backup');
+    }
+  };
+
+  const handleVerifyBackup = async (fileName: string) => {
+    try {
+      const response = await backupService.verify(fileName);
+      const result = response.data;
+      alert(result.valid ? 'Backup is valid!' : 'Backup is corrupted!');
+    } catch (error) {
+      console.error('Error verifying backup:', error);
+      alert('Failed to verify backup');
+    }
+  };
+
+  const handleDeleteBackup = async (fileName: string) => {
+    if (!confirm(`Delete backup ${fileName}?`)) return;
+
+    try {
+      await backupService.delete(fileName);
+      alert('Backup deleted successfully');
+      loadBackups();
+    } catch (error) {
+      console.error('Error deleting backup:', error);
+      alert('Failed to delete backup');
     }
   };
 
@@ -448,6 +516,68 @@ const SettingsPage = () => {
         >
           {saving ? 'Saving...' : 'Save Settings'}
         </button>
+      </div>
+
+      {/* Phase 3: Backup Management */}
+      <div className="card mb-6">
+        <h2 className="text-2xl font-semibold mb-4">Backup Management</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          Automatic backups run daily at 2 AM. Manage your backups below.
+        </p>
+
+        <div className="mb-4">
+          <button onClick={handleCreateBackup} className="btn btn-primary">
+            Create Manual Backup Now
+          </button>
+        </div>
+
+        {loadingBackups ? (
+          <div className="text-center py-4">Loading backups...</div>
+        ) : backups.length > 0 ? (
+          <div className="space-y-2">
+            <h3 className="font-semibold mb-2">Available Backups ({backups.length})</h3>
+            <div className="max-h-64 overflow-y-auto">
+              {backups.map(backup => (
+                <div
+                  key={backup.fileName}
+                  className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700 rounded mb-2"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium">{backup.fileName}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Created: {new Date(backup.createdDate).toLocaleString()} •{' '}
+                      Size: {(backup.fileSize / (1024 * 1024)).toFixed(2)} MB
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleDownloadBackup(backup.fileName)}
+                      className="btn btn-primary text-sm"
+                    >
+                      Download
+                    </button>
+                    <button
+                      onClick={() => handleVerifyBackup(backup.fileName)}
+                      className="btn btn-secondary text-sm"
+                    >
+                      Verify
+                    </button>
+                    <button
+                      onClick={() => handleDeleteBackup(backup.fileName)}
+                      className="btn btn-danger text-sm"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="text-center py-4 text-gray-500">
+            No backups available. Create your first backup above.
+          </div>
+        )}
       </div>
 
       {/* Data Management */}

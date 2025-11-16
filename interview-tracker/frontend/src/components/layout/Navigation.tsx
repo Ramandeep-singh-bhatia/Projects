@@ -19,6 +19,8 @@ const Navigation = () => {
     { path: '/behavioral', label: 'Behavioral' },
     { path: '/study-plan', label: 'Study Plan' },
     { path: '/mock-interview', label: 'Mock Interview' },
+    { path: '/flashcards', label: 'Flashcards' },
+    { path: '/voice-notes', label: 'Voice Notes' },
     { path: '/analytics', label: 'Analytics' },
     { path: '/settings', label: 'Settings' },
   ];
