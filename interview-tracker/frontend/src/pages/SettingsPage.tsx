@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { settingsService, dataService } from '../services/api';
-import { Settings, WeekStartDay, Theme } from '../types';
+import { Settings, WeekStartDay } from '../types';
 
 const SettingsPage = () => {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -186,6 +186,258 @@ const SettingsPage = () => {
               <option value="MONDAY">Monday</option>
               <option value="SUNDAY">Sunday</option>
             </select>
+          </div>
+        </div>
+
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="btn btn-primary mt-4"
+        >
+          {saving ? 'Saving...' : 'Save Settings'}
+        </button>
+      </div>
+
+      {/* Confidence Decay Settings */}
+      <div className="card mb-6">
+        <h2 className="text-2xl font-semibold mb-4">Confidence Decay System</h2>
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="confidenceDecayEnabled"
+              className="w-4 h-4"
+              checked={settings.confidenceDecayEnabled}
+              onChange={(e) => setSettings({ ...settings, confidenceDecayEnabled: e.target.checked })}
+            />
+            <label htmlFor="confidenceDecayEnabled" className="label mb-0">
+              Enable Confidence Decay
+            </label>
+          </div>
+
+          {settings.confidenceDecayEnabled && (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Decay Threshold Days (1-30)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="30"
+                    className="input"
+                    value={settings.decayThresholdDays}
+                    onChange={(e) => setSettings({ ...settings, decayThresholdDays: parseInt(e.target.value) })}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Days of inactivity before decay starts</p>
+                </div>
+                <div>
+                  <label className="label">Decay Interval Days (1-30)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="30"
+                    className="input"
+                    value={settings.decayIntervalDays}
+                    onChange={(e) => setSettings({ ...settings, decayIntervalDays: parseInt(e.target.value) })}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">How often to check and apply decay</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="label">Decay Rates by Difficulty</label>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-600 dark:text-gray-400">Easy (0.1-2.0)</label>
+                    <input
+                      type="number"
+                      min="0.1"
+                      max="2.0"
+                      step="0.1"
+                      className="input"
+                      value={settings.decayRateEasy}
+                      onChange={(e) => setSettings({ ...settings, decayRateEasy: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-600 dark:text-gray-400">Medium (0.1-2.0)</label>
+                    <input
+                      type="number"
+                      min="0.1"
+                      max="2.0"
+                      step="0.1"
+                      className="input"
+                      value={settings.decayRateMedium}
+                      onChange={(e) => setSettings({ ...settings, decayRateMedium: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-gray-600 dark:text-gray-400">Hard (0.1-2.0)</label>
+                    <input
+                      type="number"
+                      min="0.1"
+                      max="2.0"
+                      step="0.1"
+                      className="input"
+                      value={settings.decayRateHard}
+                      onChange={(e) => setSettings({ ...settings, decayRateHard: parseFloat(e.target.value) })}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="label">Minimum Confidence (1-10)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    className="input"
+                    value={settings.decayStopAtConfidence}
+                    onChange={(e) => setSettings({ ...settings, decayStopAtConfidence: parseInt(e.target.value) })}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Decay stops at this confidence level</p>
+                </div>
+                <div className="flex items-center gap-2 pt-8">
+                  <input
+                    type="checkbox"
+                    id="applyDecayToNew"
+                    className="w-4 h-4"
+                    checked={settings.applyDecayToNew}
+                    onChange={(e) => setSettings({ ...settings, applyDecayToNew: e.target.checked })}
+                  />
+                  <label htmlFor="applyDecayToNew" className="label mb-0">
+                    Apply to new topics
+                  </label>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="btn btn-primary mt-4"
+        >
+          {saving ? 'Saving...' : 'Save Settings'}
+        </button>
+      </div>
+
+      {/* Pomodoro Settings */}
+      <div className="card mb-6">
+        <h2 className="text-2xl font-semibold mb-4">Pomodoro Timer</h2>
+        <div className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="label">Work Duration (15-60 min)</label>
+              <input
+                type="number"
+                min="15"
+                max="60"
+                className="input"
+                value={settings.pomodoroWorkDuration}
+                onChange={(e) => setSettings({ ...settings, pomodoroWorkDuration: parseInt(e.target.value) })}
+              />
+            </div>
+            <div>
+              <label className="label">Short Break (3-10 min)</label>
+              <input
+                type="number"
+                min="3"
+                max="10"
+                className="input"
+                value={settings.pomodoroShortBreak}
+                onChange={(e) => setSettings({ ...settings, pomodoroShortBreak: parseInt(e.target.value) })}
+              />
+            </div>
+            <div>
+              <label className="label">Long Break (10-30 min)</label>
+              <input
+                type="number"
+                min="10"
+                max="30"
+                className="input"
+                value={settings.pomodoroLongBreak}
+                onChange={(e) => setSettings({ ...settings, pomodoroLongBreak: parseInt(e.target.value) })}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="label">Pomodoros Before Long Break (2-8)</label>
+            <input
+              type="number"
+              min="2"
+              max="8"
+              className="input w-48"
+              value={settings.pomodorosBeforeLongBreak}
+              onChange={(e) => setSettings({ ...settings, pomodorosBeforeLongBreak: parseInt(e.target.value) })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="autoStartBreaks"
+                className="w-4 h-4"
+                checked={settings.autoStartBreaks}
+                onChange={(e) => setSettings({ ...settings, autoStartBreaks: e.target.checked })}
+              />
+              <label htmlFor="autoStartBreaks" className="label mb-0">
+                Auto-start breaks
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="autoStartPomodoros"
+                className="w-4 h-4"
+                checked={settings.autoStartPomodoros}
+                onChange={(e) => setSettings({ ...settings, autoStartPomodoros: e.target.checked })}
+              />
+              <label htmlFor="autoStartPomodoros" className="label mb-0">
+                Auto-start pomodoros after breaks
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="soundEnabled"
+                className="w-4 h-4"
+                checked={settings.soundEnabled}
+                onChange={(e) => setSettings({ ...settings, soundEnabled: e.target.checked })}
+              />
+              <label htmlFor="soundEnabled" className="label mb-0">
+                Enable completion sound
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="notificationsEnabled"
+                className="w-4 h-4"
+                checked={settings.notificationsEnabled}
+                onChange={(e) => setSettings({ ...settings, notificationsEnabled: e.target.checked })}
+              />
+              <label htmlFor="notificationsEnabled" className="label mb-0">
+                Enable notifications
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="tickingSoundEnabled"
+                className="w-4 h-4"
+                checked={settings.tickingSoundEnabled}
+                onChange={(e) => setSettings({ ...settings, tickingSoundEnabled: e.target.checked })}
+              />
+              <label htmlFor="tickingSoundEnabled" className="label mb-0">
+                Enable ticking sound
+              </label>
+            </div>
           </div>
         </div>
 

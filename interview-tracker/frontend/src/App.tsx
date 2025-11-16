@@ -7,6 +7,8 @@ import LLDPage from './pages/LLDPage';
 import BehavioralPage from './pages/BehavioralPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
+import StudyPlanPage from './pages/StudyPlanPage';
+import MockInterviewPage from './pages/MockInterviewPage';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="hld" element={<HLDPage />} />
           <Route path="lld" element={<LLDPage />} />
           <Route path="behavioral" element={<BehavioralPage />} />
+          <Route path="study-plan" element={<StudyPlanPage />} />
+          <Route path="mock-interview" element={<MockInterviewPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>

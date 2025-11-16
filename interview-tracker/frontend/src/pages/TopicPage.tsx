@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { topicService, sessionService, fileService } from '../services/api';
-import { Topic, TopicCategory, PracticeSession, SessionType, DifficultyLevel } from '../types';
+import { topicService, sessionService } from '../services/api';
+import { Topic, TopicCategory, SessionType } from '../types';
 
 interface TopicPageProps {
   category: TopicCategory;
