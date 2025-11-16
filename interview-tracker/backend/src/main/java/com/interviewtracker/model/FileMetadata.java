@@ -10,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "file_metadata")
@@ -46,4 +48,18 @@ public class FileMetadata {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime uploadDate;
+
+    // Phase 3: Enhanced file management
+    @Enumerated(EnumType.STRING)
+    private FileCategory category;
+
+    @ElementCollection
+    @CollectionTable(name = "file_tags", joinColumns = @JoinColumn(name = "file_id"))
+    @Column(name = "tag")
+    private Set<String> tags = new HashSet<>();
+
+    private Integer version = 1; // File version number
+    private Long parentFileId; // ID of previous version (if this is a new version)
+    private Integer viewCount = 0; // Track how many times file was viewed
+    private LocalDateTime lastViewedDate;
 }
