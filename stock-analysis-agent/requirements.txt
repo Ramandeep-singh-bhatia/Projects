@@ -73,7 +73,7 @@ tenacity==8.2.3
 # Using local SMTP or file-based notifications instead
 
 # Security
-cryptography==41.0.7
+cryptography==44.0.1
 
 # Development Tools
 black==23.12.1
