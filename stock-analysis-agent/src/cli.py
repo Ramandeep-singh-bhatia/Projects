@@ -1001,6 +1001,365 @@ def alerts(min_risk):
 
 
 # ============================================================================
+# LEARNING COMMANDS (PHASE 3)
+# ============================================================================
+
+@cli.group()
+def learning():
+    """Learning engine and adaptive system commands"""
+    pass
+
+
+@learning.command(name='analyze')
+@click.option('--days', default=30, help='Days to analyze (default: 30)')
+def learning_analyze(days):
+    """Analyze system performance and learning metrics"""
+    click.echo(f"Analyzing performance over last {days} days...")
+    click.echo()
+
+    from src.learning.learning_engine import LearningEngine
+
+    try:
+        engine = LearningEngine()
+        analysis = engine.analyze_performance(days_back=days)
+
+        # Overall performance
+        click.echo("PERFORMANCE OVERVIEW:")
+        click.echo("=" * 60)
+        click.echo(f"Total Signals: {analysis['total_signals']}")
+        click.echo(f"Success Rate: {analysis['success_rate']:.1f}%")
+        click.echo(f"Average Gain: {analysis['avg_gain']:.2f}%")
+        click.echo(f"Confidence Accuracy: {analysis['confidence_accuracy']:.1f}%")
+
+        # By catalyst
+        if analysis.get('by_catalyst'):
+            click.echo("\nBY CATALYST TYPE:")
+            click.echo("-" * 60)
+            for catalyst, stats in analysis['by_catalyst'].items():
+                click.echo(f"  {catalyst.upper()}: {stats['success_rate']:.1f}% "
+                          f"({stats['successful']}/{stats['total']})")
+
+        # By signal type
+        if analysis.get('by_signal_type'):
+            click.echo("\nBY SIGNAL TYPE:")
+            click.echo("-" * 60)
+            for sig_type, stats in analysis['by_signal_type'].items():
+                click.echo(f"  {sig_type}: {stats['success_rate']:.1f}% "
+                          f"({stats['successful']}/{stats['total']})")
+
+        # Success factors
+        if analysis.get('success_factors'):
+            click.echo("\nTOP SUCCESS FACTORS:")
+            click.echo("-" * 60)
+            for factor in analysis['success_factors'][:5]:
+                click.echo(f"  • {factor['factor']}: {factor['percentage']:.1f}%")
+
+        click.secho("\n✓ Analysis complete", fg='green')
+
+    except Exception as e:
+        click.secho(f"\n✗ Error: {e}", fg='red')
+
+
+@learning.command(name='patterns')
+@click.option('--min-samples', default=5, help='Minimum sample size (default: 5)')
+def learning_patterns(min_samples):
+    """Show discovered patterns from historical data"""
+    click.echo(f"Analyzing patterns (min samples: {min_samples})...")
+    click.echo()
+
+    from src.learning.pattern_recognizer import PatternRecognizer
+
+    try:
+        recognizer = PatternRecognizer()
+        patterns = recognizer.analyze_all_patterns()
+
+        # Filter by sample size
+        validated_patterns = [p for p in patterns if p['sample_size'] >= min_samples]
+
+        if not validated_patterns:
+            click.echo("No patterns discovered yet with sufficient samples.")
+            click.echo(f"Need at least {min_samples} samples per pattern.")
+            return
+
+        # Sort by success rate
+        validated_patterns.sort(key=lambda x: x['success_rate'], reverse=True)
+
+        click.echo(f"DISCOVERED PATTERNS ({len(validated_patterns)}):")
+        click.echo("=" * 70)
+
+        for i, pattern in enumerate(validated_patterns[:15], 1):
+            click.echo(f"\n{i}. {pattern['description']}")
+            click.echo(f"   Type: {pattern['pattern_type']}")
+            click.echo(f"   Success Rate: {pattern['success_rate']:.1f}%")
+            click.echo(f"   Sample Size: {pattern['sample_size']}")
+            click.echo(f"   Statistical Confidence: {pattern['statistical_confidence']:.1f}%")
+
+            # Show characteristics
+            if pattern.get('characteristics'):
+                chars = pattern['characteristics']
+                if isinstance(chars, dict):
+                    click.echo(f"   Characteristics:")
+                    for key, value in chars.items():
+                        click.echo(f"     - {key}: {value}")
+
+        click.secho(f"\n✓ Found {len(validated_patterns)} validated patterns", fg='green')
+
+    except Exception as e:
+        click.secho(f"\n✗ Error: {e}", fg='red')
+
+
+@learning.command(name='weights')
+@click.option('--update', is_flag=True, help='Update weights based on recent performance')
+@click.option('--history', is_flag=True, help='Show weight adjustment history')
+def learning_weights(update, history):
+    """View or update adaptive weights"""
+    from src.learning.adaptive_weights import AdaptiveWeightsSystem
+
+    try:
+        system = AdaptiveWeightsSystem()
+
+        if update:
+            # Update weights
+            click.echo("Updating adaptive weights...")
+            click.echo()
+
+            result = system.update_weights(min_signals=20)
+
+            if result['updated']:
+                click.secho("✓ Weights updated successfully!", fg='green')
+                click.echo(f"Version: {result['version']}")
+                click.echo("\nChanges:")
+                for key, change in result['changes'].items():
+                    symbol = '+' if change > 0 else ''
+                    color = 'green' if change > 0 else 'red' if change < 0 else 'white'
+                    click.secho(f"  {key}: {symbol}{change:.3f}", fg=color)
+            else:
+                click.secho(f"✗ Weights not updated: {result['reason']}", fg='yellow')
+
+        elif history:
+            # Show history
+            click.echo("WEIGHT ADJUSTMENT HISTORY:")
+            click.echo("=" * 70)
+
+            hist = system.get_weight_history(last_n=10)
+
+            if not hist:
+                click.echo("No weight adjustments yet.")
+            else:
+                for i, adj in enumerate(reversed(hist), 1):
+                    click.echo(f"\n{i}. {adj['timestamp']}")
+                    click.echo(f"   Reason: {adj['reason']}")
+                    click.echo(f"   Performance: {adj['performance_data']['success_rate']:.1f}% "
+                              f"({adj['performance_data']['total_signals']} signals)")
+
+        else:
+            # Show current weights
+            weights = system.get_adjusted_weights()
+
+            click.echo("CURRENT ADAPTIVE WEIGHTS:")
+            click.echo("=" * 70)
+            click.echo(f"Version: {weights['version']}")
+            click.echo(f"Last Updated: {weights['last_updated'] or 'Never'}")
+
+            click.echo("\nSignal Generation Weights:")
+            for key, value in weights['signal_generation'].items():
+                click.echo(f"  {key}: {value:.3f}")
+
+            click.echo("\nConfidence Thresholds:")
+            for key, value in weights['confidence_thresholds'].items():
+                click.echo(f"  {key}: {value}")
+
+            click.echo("\nCatalyst Multipliers:")
+            for key, value in weights['catalyst_multipliers'].items():
+                click.echo(f"  {key}: {value:.2f}x")
+
+    except Exception as e:
+        click.secho(f"\n✗ Error: {e}", fg='red')
+
+
+@learning.command(name='report')
+@click.option('--type', 'report_type', default='weekly',
+              type=click.Choice(['weekly', 'monthly', 'performance']),
+              help='Report type (default: weekly)')
+@click.option('--export', is_flag=True, help='Export as markdown')
+def learning_report(report_type, export):
+    """Generate learning and performance reports"""
+    click.echo(f"Generating {report_type} report...")
+    click.echo()
+
+    from src.learning.report_generator import ReportGenerator
+
+    try:
+        generator = ReportGenerator()
+
+        # Generate report
+        if report_type == 'weekly':
+            report = generator.generate_weekly_report(save_to_file=True)
+        elif report_type == 'monthly':
+            report = generator.generate_monthly_report(save_to_file=True)
+        else:
+            report = generator.generate_performance_report(save_to_file=True)
+
+        # Show summary
+        click.echo("REPORT SUMMARY:")
+        click.echo("=" * 70)
+
+        if 'summary' in report:
+            summary = report['summary']
+            click.echo(f"Overall Assessment: {summary['overall_assessment'].upper()}")
+            click.echo(f"\nKey Metrics:")
+            for key, value in summary['key_metrics'].items():
+                click.echo(f"  {key.replace('_', ' ').title()}: {value}")
+            click.echo(f"\nRecommendation: {summary['recommendation']}")
+
+        # Show sections
+        sections = report.get('sections', {})
+        click.echo(f"\nSections Included: {len(sections)}")
+        for section_name in sections.keys():
+            click.echo(f"  • {section_name.title()}")
+
+        # Export markdown
+        if export:
+            md = generator.export_markdown(report)
+            md_file = generator.reports_dir / f"{report_type}_report.md"
+            with open(md_file, 'w') as f:
+                f.write(md)
+            click.secho(f"\n✓ Markdown exported to {md_file}", fg='green')
+
+        click.secho(f"\n✓ Report generated and saved to reports/ directory", fg='green')
+
+    except Exception as e:
+        click.secho(f"\n✗ Error: {e}", fg='red')
+
+
+@learning.command(name='backtest')
+@click.option('--days', default=30, help='Days to backtest (default: 30)')
+@click.option('--strategy', is_flag=True, help='Test with custom strategy')
+def learning_backtest(days, strategy):
+    """Run backtesting on historical data"""
+    click.echo(f"Backtesting last {days} days...")
+    click.echo()
+
+    from src.learning.backtester import Backtester
+
+    try:
+        backtester = Backtester()
+
+        # Date range
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=days)
+
+        # Run backtest
+        if strategy:
+            click.echo("Testing custom strategy...")
+            result = backtester.backtest_strategy(start_date, end_date)
+        else:
+            click.echo("Testing historical signals...")
+            result = backtester.backtest_historical_signals(start_date, end_date)
+
+        # Display results
+        click.echo("BACKTEST RESULTS:")
+        click.echo("=" * 70)
+        click.echo(f"Period: {start_date.date()} to {end_date.date()}")
+        click.echo(f"\nPerformance:")
+        click.echo(f"  Total Signals: {result.total_signals}")
+        click.echo(f"  Successful: {result.successful_signals}")
+        click.echo(f"  Failed: {result.failed_signals}")
+        click.echo(f"  Success Rate: {result.success_rate:.1f}%")
+
+        click.echo(f"\nReturns:")
+        click.echo(f"  Total Return: {result.total_return:.2f}%")
+        click.echo(f"  Average Gain: {result.avg_gain:.2f}%")
+        click.echo(f"  Average Loss: {result.avg_loss:.2f}%")
+
+        click.echo(f"\nRisk Metrics:")
+        click.echo(f"  Sharpe Ratio: {result.sharpe_ratio:.2f}")
+        click.echo(f"  Max Drawdown: {result.max_drawdown:.2f}%")
+        click.echo(f"  Win/Loss Ratio: {result.win_loss_ratio:.2f}")
+
+        if result.best_trade:
+            click.echo(f"\nBest Trade: {result.best_trade['ticker']} "
+                      f"(+{result.best_trade['gain']:.2f}%)")
+
+        if result.worst_trade:
+            click.echo(f"Worst Trade: {result.worst_trade['ticker']} "
+                      f"({result.worst_trade['loss']:.2f}%)")
+
+        # By catalyst
+        if result.by_catalyst:
+            click.echo(f"\nBy Catalyst Type:")
+            for catalyst, stats in result.by_catalyst.items():
+                click.echo(f"  {catalyst}: {stats['success_rate']:.1f}% "
+                          f"({stats['successful']}/{stats['total']})")
+
+        click.secho("\n✓ Backtest complete", fg='green')
+
+    except Exception as e:
+        click.secho(f"\n✗ Error: {e}", fg='red')
+
+
+@learning.command(name='recommendations')
+def learning_recommendations():
+    """Get AI recommendations for system improvements"""
+    click.echo("Analyzing system and generating recommendations...")
+    click.echo()
+
+    from src.learning.adaptive_weights import AdaptiveWeightsSystem
+
+    try:
+        system = AdaptiveWeightsSystem()
+        recs = system.get_recommended_adjustments()
+
+        if not recs:
+            click.echo("No recommendations at this time.")
+            click.echo("System is performing within expected parameters.")
+            return
+
+        click.echo(f"RECOMMENDATIONS ({len(recs)}):")
+        click.echo("=" * 70)
+
+        # Group by type
+        by_type = {}
+        for rec in recs:
+            rec_type = rec.get('type', 'info')
+            if rec_type not in by_type:
+                by_type[rec_type] = []
+            by_type[rec_type].append(rec)
+
+        # Display by priority
+        for rec_type in ['warning', 'insight', 'success', 'info']:
+            if rec_type not in by_type:
+                continue
+
+            symbol = {
+                'warning': '⚠️',
+                'success': '✓',
+                'insight': '💡',
+                'info': 'ℹ️'
+            }.get(rec_type, '•')
+
+            color = {
+                'warning': 'yellow',
+                'success': 'green',
+                'insight': 'cyan',
+                'info': 'white'
+            }.get(rec_type, 'white')
+
+            for rec in by_type[rec_type]:
+                click.echo()
+                click.secho(f"{symbol} {rec['message']}", fg=color)
+                if 'action' in rec:
+                    click.echo(f"   Action: {rec['action']}")
+                if 'category' in rec:
+                    click.echo(f"   Category: {rec['category']}")
+
+        click.secho(f"\n✓ Generated {len(recs)} recommendations", fg='green')
+
+    except Exception as e:
+        click.secho(f"\n✗ Error: {e}", fg='red')
+
+
+# ============================================================================
 # UTILITY COMMANDS
 # ============================================================================
 
@@ -1090,8 +1449,53 @@ def test():
     except Exception as e:
         click.secho(f"   ✗ Portfolio monitor failed: {e}", fg='red')
 
+    # Test 9: Learning engine (Phase 3)
+    click.echo("\n9. Testing learning engine...")
+    try:
+        from src.learning.learning_engine import LearningEngine
+        engine = LearningEngine()
+        click.secho(f"   ✓ Learning engine loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Learning engine failed: {e}", fg='red')
+
+    # Test 10: Pattern recognizer (Phase 3)
+    click.echo("\n10. Testing pattern recognizer...")
+    try:
+        from src.learning.pattern_recognizer import PatternRecognizer
+        recognizer = PatternRecognizer()
+        click.secho(f"   ✓ Pattern recognizer loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Pattern recognizer failed: {e}", fg='red')
+
+    # Test 11: Adaptive weights (Phase 3)
+    click.echo("\n11. Testing adaptive weights system...")
+    try:
+        from src.learning.adaptive_weights import AdaptiveWeightsSystem
+        weights_system = AdaptiveWeightsSystem()
+        click.secho(f"   ✓ Adaptive weights system loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Adaptive weights failed: {e}", fg='red')
+
+    # Test 12: Backtester (Phase 3)
+    click.echo("\n12. Testing backtester...")
+    try:
+        from src.learning.backtester import Backtester
+        backtester = Backtester()
+        click.secho(f"   ✓ Backtester loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Backtester failed: {e}", fg='red')
+
+    # Test 13: Report generator (Phase 3)
+    click.echo("\n13. Testing report generator...")
+    try:
+        from src.learning.report_generator import ReportGenerator
+        report_gen = ReportGenerator()
+        click.secho(f"   ✓ Report generator loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Report generator failed: {e}", fg='red')
+
     click.echo("\n" + "=" * 60)
-    click.echo("Phase 1 & 2 tests complete!")
+    click.echo("Phase 1, 2 & 3 tests complete!")
     click.echo("=" * 60)
 
 
