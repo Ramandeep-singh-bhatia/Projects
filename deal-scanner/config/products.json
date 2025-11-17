@@ -1,0 +1,49 @@
+{
+  "watchlist": [
+    {
+      "id": 1,
+      "category": "TV",
+      "keywords": ["65 inch", "4K", "OLED", "QLED", "smart tv"],
+      "max_price": 800,
+      "priority": "high",
+      "retailers": ["amazon", "bestbuy", "walmart"],
+      "check_frequency": "30min"
+    },
+    {
+      "id": 2,
+      "category": "Baby Stroller",
+      "keywords": ["stroller", "baby jogger", "double stroller", "infant stroller"],
+      "max_price": 300,
+      "priority": "medium",
+      "retailers": ["amazon", "walmart", "target"],
+      "check_frequency": "2hours"
+    },
+    {
+      "id": 3,
+      "category": "Laptop",
+      "keywords": ["laptop", "notebook", "macbook", "thinkpad", "dell xps"],
+      "max_price": 1000,
+      "priority": "high",
+      "retailers": ["amazon", "bestbuy"],
+      "check_frequency": "30min"
+    },
+    {
+      "id": 4,
+      "category": "Gaming Console",
+      "keywords": ["playstation 5", "ps5", "xbox series x", "nintendo switch"],
+      "max_price": 500,
+      "priority": "medium",
+      "retailers": ["amazon", "bestbuy", "walmart"],
+      "check_frequency": "2hours"
+    },
+    {
+      "id": 5,
+      "category": "Headphones",
+      "keywords": ["wireless headphones", "noise cancelling", "airpods", "sony wh-1000xm"],
+      "max_price": 250,
+      "priority": "low",
+      "retailers": ["amazon", "bestbuy"],
+      "check_frequency": "daily"
+    }
+  ]
+}
