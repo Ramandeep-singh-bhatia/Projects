@@ -30,7 +30,7 @@ python-telegram-bot==20.7
 
 # HTTP Clients & Rate Limiting
 httpx==0.25.2
-aiohttp==3.9.1
+aiohttp==3.12.14
 tenacity==8.2.3
 
 # Data Processing
