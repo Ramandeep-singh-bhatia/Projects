@@ -482,6 +482,525 @@ def stock(ticker):
 
 
 # ============================================================================
+# PORTFOLIO COMMANDS (Phase 2)
+# ============================================================================
+
+@cli.group()
+def portfolio():
+    """Portfolio management commands"""
+    pass
+
+
+@portfolio.command()
+@click.argument('ticker')
+@click.argument('shares', type=float)
+@click.argument('price', type=float)
+@click.option('--type', 'inv_type', type=click.Choice(['short_term', 'long_term']), default='long_term')
+@click.option('--notes', default=None, help='Optional notes')
+def add(ticker, shares, price, inv_type, notes):
+    """Add a position to portfolio"""
+    from src.portfolio.portfolio_manager import PortfolioManager
+
+    ticker = ticker.upper()
+    click.echo(f"Adding position: {ticker}, {shares} shares @ ${price:.2f}")
+
+    manager = PortfolioManager()
+    position = manager.add_position(
+        ticker=ticker,
+        shares=shares,
+        purchase_price=price,
+        investment_type=inv_type,
+        notes=notes
+    )
+
+    click.secho(f"\n✓ Position added successfully!", fg='green')
+    click.echo(f"Position ID: {position.id}")
+    click.echo(f"Company: {position.company_name}")
+    click.echo(f"Cost Basis: ${position.purchase_price * position.shares:.2f}")
+
+
+@portfolio.command()
+@click.argument('position_id', type=int)
+@click.option('--price', type=float, help='Exit price (default: current market price)')
+@click.option('--reason', default='Manual exit', help='Exit reason')
+def remove(position_id, price, reason):
+    """Remove/close a position"""
+    from src.portfolio.portfolio_manager import PortfolioManager
+
+    manager = PortfolioManager()
+
+    click.echo(f"Closing position ID {position_id}...")
+
+    position = manager.remove_position(
+        position_id=position_id,
+        exit_price=price,
+        exit_reason=reason
+    )
+
+    click.secho(f"\n✓ Position closed!", fg='green')
+    click.echo(f"Ticker: {position.ticker}")
+    click.echo(f"Exit Price: ${position.exit_price:.2f}")
+
+    if position.realized_gain_loss_pct:
+        color = 'green' if position.realized_gain_loss_pct > 0 else 'red'
+        click.secho(f"Realized P&L: ${position.realized_gain_loss_dollar:.2f} "
+                   f"({position.realized_gain_loss_pct:+.2f}%)", fg=color)
+
+
+@portfolio.command(name='list')
+@click.option('--status', type=click.Choice(['active', 'closed']), default='active')
+def list_positions(status):
+    """List portfolio positions"""
+    from src.portfolio.portfolio_manager import PortfolioManager
+    from src.utils.helpers import format_currency, format_percentage
+
+    manager = PortfolioManager()
+    positions = manager.get_all_positions(status=status)
+
+    if not positions:
+        click.echo(f"No {status} positions")
+        return
+
+    # Update prices
+    manager.update_position_prices(positions)
+
+    click.echo(f"\n{status.upper()} POSITIONS ({len(positions)}):")
+    click.echo("=" * 100)
+
+    # Prepare table data
+    headers = ['ID', 'Ticker', 'Shares', 'Entry', 'Current', 'P&L $', 'P&L %', 'Days', 'Risk']
+    rows = []
+
+    for p in positions:
+        if status == 'active':
+            pnl_dollar = p.unrealized_gain_loss_dollar or 0
+            pnl_pct = p.unrealized_gain_loss_pct or 0
+            current_price = p.current_price or p.purchase_price
+            risk = p.current_risk_level.value if p.current_risk_level else '-'
+        else:
+            pnl_dollar = p.realized_gain_loss_dollar or 0
+            pnl_pct = p.realized_gain_loss_pct or 0
+            current_price = p.exit_price or p.purchase_price
+            risk = '-'
+
+        rows.append([
+            p.id,
+            p.ticker,
+            f"{p.shares:.0f}",
+            f"${p.purchase_price:.2f}",
+            f"${current_price:.2f}",
+            format_currency(pnl_dollar),
+            format_percentage(pnl_pct),
+            p.days_held or 0,
+            risk
+        ])
+
+    click.echo(tabulate(rows, headers=headers, tablefmt='simple'))
+
+
+@portfolio.command()
+def summary():
+    """Show portfolio summary"""
+    from src.portfolio.portfolio_manager import PortfolioManager
+    from src.utils.helpers import format_currency, format_percentage
+
+    manager = PortfolioManager()
+    summary_data = manager.get_portfolio_summary()
+
+    if summary_data.get('total_positions', 0) == 0:
+        click.echo("Portfolio is empty")
+        click.echo("\nAdd a position:")
+        click.echo("  python -m src.cli portfolio add AAPL 10 150.00")
+        return
+
+    click.echo("\nPORTFOLIO SUMMARY:")
+    click.echo("=" * 60)
+
+    click.echo(f"\nTotal Positions: {summary_data['total_positions']}")
+    click.echo(f"  • Profitable: {summary_data['positions_profitable']}")
+    click.echo(f"  • Losing: {summary_data['positions_losing']}")
+
+    click.echo(f"\nInvestment:")
+    click.echo(f"  Total Invested: {format_currency(summary_data['total_invested'])}")
+    click.echo(f"  Current Value:  {format_currency(summary_data['current_value'])}")
+
+    pnl = summary_data['total_gain_loss']
+    pnl_pct = summary_data['total_gain_loss_pct']
+    color = 'green' if pnl > 0 else 'red'
+    click.echo(f"  Total P&L:      {click.style(format_currency(pnl), fg=color)} "
+              f"({click.style(format_percentage(pnl_pct), fg=color)})")
+
+    if summary_data.get('best_performer'):
+        best = summary_data['best_performer']
+        click.echo(f"\nBest Performer: {best['ticker']} "
+                  f"({format_currency(best['gain_dollar'])}, {format_percentage(best['gain_pct'])})")
+
+    if summary_data.get('worst_performer'):
+        worst = summary_data['worst_performer']
+        click.echo(f"Worst Performer: {worst['ticker']} "
+                  f"({format_currency(worst['loss_dollar'])}, {format_percentage(worst['loss_pct'])})")
+
+
+# ============================================================================
+# SIGNAL COMMANDS (Phase 2)
+# ============================================================================
+
+@cli.group()
+def signals():
+    """Investment signal management commands"""
+    pass
+
+
+@signals.command()
+@click.option('--max-signals', default=5, help='Maximum signals to generate')
+@click.option('--use-newsapi', is_flag=True, help='Use NewsAPI (consumes quota)')
+def scan(max_signals, use_newsapi):
+    """Scan for new investment signals"""
+    from src.signals.signal_generator import SignalGenerator
+    from src.signals.signal_tracker import SignalTracker
+
+    click.echo("Scanning for investment signals...")
+    click.echo("(This may take a minute...)\n")
+
+    generator = SignalGenerator()
+    tracker = SignalTracker()
+
+    # Generate signals
+    signals = generator.scan_for_signals(
+        max_signals=max_signals,
+        use_newsapi=use_newsapi
+    )
+
+    if not signals:
+        click.echo("No signals generated")
+        click.echo("\nThis could mean:")
+        click.echo("  • No strong catalysts in recent news")
+        click.echo("  • All potential signals below confidence threshold")
+        click.echo("  • Try again during market hours or after major news")
+        return
+
+    click.secho(f"\n✓ Generated {len(signals)} signal(s)!", fg='green')
+    click.echo("=" * 80)
+
+    # Save and display signals
+    for i, signal in enumerate(signals, 1):
+        # Save to database
+        saved_signal = tracker.save_signal(signal)
+
+        click.echo(f"\nSIGNAL #{i} (ID: {saved_signal.id})")
+        click.echo("-" * 80)
+        click.echo(f"Ticker: {signal['ticker']} ({signal['company_name']})")
+        click.echo(f"Type: {signal['signal_type'].upper()} ({signal['timeframe_days']} days)")
+        click.echo(f"Confidence: {signal['confidence']:.0f}%")
+        click.echo()
+        click.echo(f"Entry Price: ${signal['entry_price']:.2f}")
+        click.echo(f"Target: ${signal['target_price']:.2f} ({signal['expected_gain_pct']:+.1f}%)")
+        click.echo(f"Stop Loss: ${signal['stop_loss']:.2f}")
+        click.echo()
+        click.echo(f"Catalyst: {signal['news_title'][:70]}...")
+        click.echo(f"Event Type: {signal.get('catalyst_type', 'N/A')}")
+
+    click.echo("\n" + "=" * 80)
+    click.echo("\nSignals saved to database. Track with:")
+    click.echo("  python -m src.cli signals list --active")
+
+
+@signals.command(name='list')
+@click.option('--active', is_flag=True, help='Show only active signals')
+@click.option('--limit', default=10, help='Number of signals to show')
+def list_signals(active, limit):
+    """List generated signals"""
+    from src.signals.signal_tracker import SignalTracker
+    from src.database.models import SignalGenerated, SignalStatus
+
+    tracker = SignalTracker()
+
+    query = tracker.session.query(SignalGenerated)
+
+    if active:
+        query = query.filter_by(status=SignalStatus.ACTIVE)
+
+    signals = query.order_by(SignalGenerated.timestamp.desc()).limit(limit).all()
+
+    if not signals:
+        click.echo("No signals found")
+        click.echo("\nGenerate signals:")
+        click.echo("  python -m src.cli signals scan")
+        return
+
+    click.echo(f"\nSIGNALS ({len(signals)}):")
+    click.echo("=" * 100)
+
+    headers = ['ID', 'Date', 'Ticker', 'Type', 'Entry', 'Target', 'Exp. Gain', 'Conf.', 'Status']
+    rows = []
+
+    for s in signals:
+        rows.append([
+            s.id,
+            s.timestamp.strftime('%m/%d'),
+            s.ticker,
+            s.signal_type.value[:5],
+            f"${s.entry_price:.2f}",
+            f"${s.target_price:.2f}",
+            f"{s.expected_gain_pct:+.1f}%",
+            f"{s.confidence:.0f}%",
+            s.status.value
+        ])
+
+    click.echo(tabulate(rows, headers=headers, tablefmt='simple'))
+
+
+@signals.command()
+@click.option('--all', 'track_all', is_flag=True, help='Track all active signals')
+@click.argument('signal_id', type=int, required=False)
+def track(signal_id, track_all):
+    """Track signal progress"""
+    from src.signals.signal_tracker import SignalTracker
+
+    tracker = SignalTracker()
+
+    if track_all:
+        results = tracker.track_all_active_signals()
+
+        if not results:
+            click.echo("No active signals to track")
+            return
+
+        click.echo(f"\nTRACKING {len(results)} ACTIVE SIGNAL(S):")
+        click.echo("=" * 90)
+
+        for r in results:
+            status_symbol = "✓" if r['current_gain_pct'] > 0 else "✗"
+            color = 'green' if r['current_gain_pct'] > 0 else 'red'
+
+            click.echo(f"\n{status_symbol} Signal #{r['signal_id']}: {r['ticker']}")
+            click.echo(f"  Entry: ${r['entry_price']:.2f} | Current: ${r['current_price']:.2f}")
+            click.echo(f"  Target: ${r['target_price']:.2f}")
+            click.secho(f"  Current Gain: {r['current_gain_pct']:+.1f}% (Expected: {r['expected_gain_pct']:.1f}%)", fg=color)
+            click.echo(f"  Progress: Day {r['days_elapsed']} of {r['days_elapsed'] + r['days_remaining']}")
+
+            if r['target_achieved']:
+                click.secho("  🎯 TARGET ACHIEVED!", fg='green', bold=True)
+            if r['stop_loss_hit']:
+                click.secho("  ⚠️  STOP LOSS HIT!", fg='red', bold=True)
+
+    elif signal_id:
+        result = tracker.track_signal(signal_id)
+
+        if not result:
+            click.echo(f"Signal {signal_id} not found")
+            return
+
+        click.echo(f"\nSIGNAL #{result['signal_id']}: {result['ticker']}")
+        click.echo("=" * 60)
+        click.echo(f"Status: {result['status'].upper()}")
+        click.echo(f"\nPrices:")
+        click.echo(f"  Entry:   ${result['entry_price']:.2f}")
+        click.echo(f"  Current: ${result['current_price']:.2f}")
+        click.echo(f"  Target:  ${result['target_price']:.2f}")
+        click.echo(f"  Stop:    ${result['stop_loss']:.2f}")
+
+        color = 'green' if result['current_gain_pct'] > 0 else 'red'
+        click.echo(f"\nPerformance:")
+        click.secho(f"  Current Gain: {result['current_gain_pct']:+.1f}%", fg=color)
+        click.echo(f"  Expected Gain: {result['expected_gain_pct']:.1f}%")
+        click.echo(f"  Confidence: {result['confidence']:.0f}%")
+
+        click.echo(f"\nTimeframe:")
+        click.echo(f"  Elapsed: {result['days_elapsed']} days ({result['hours_elapsed']:.0f} hours)")
+        click.echo(f"  Remaining: {result['days_remaining']} days")
+
+        if result['target_achieved']:
+            click.secho("\n✓ TARGET ACHIEVED!", fg='green', bold=True)
+        if result['stop_loss_hit']:
+            click.secho("\n✗ STOP LOSS HIT!", fg='red', bold=True)
+
+    else:
+        click.echo("Specify --all or provide a signal ID")
+        click.echo("\nExamples:")
+        click.echo("  python -m src.cli signals track --all")
+        click.echo("  python -m src.cli signals track 1")
+
+
+@signals.command()
+@click.argument('signal_id', type=int)
+def validate(signal_id):
+    """Validate a signal outcome"""
+    from src.signals.signal_tracker import SignalTracker
+
+    click.echo(f"Validating signal {signal_id}...")
+
+    tracker = SignalTracker()
+    outcome = tracker.validate_signal(signal_id)
+
+    if not outcome:
+        click.echo("Could not validate signal")
+        return
+
+    click.secho(f"\n✓ Signal validated!", fg='green')
+    click.echo("=" * 60)
+
+    click.echo(f"\nOutcome: {outcome.final_outcome.upper()}")
+
+    if outcome.success_flag:
+        click.secho("Result: SUCCESS", fg='green', bold=True)
+    else:
+        click.secho("Result: FAILURE", fg='red', bold=True)
+
+    click.echo(f"\nPerformance:")
+    click.echo(f"  Peak Gain: {outcome.peak_gain_pct:+.1f}%")
+    click.echo(f"  Final Gain: {outcome.actual_gain_pct:+.1f}%")
+    click.echo(f"  Time to Peak: {outcome.time_to_peak_hours:.1f} hours")
+    click.echo(f"  Gain Sustained 24h: {'Yes' if outcome.gain_sustained_24h else 'No'}")
+
+    click.echo(f"\nLessons Learned:")
+    click.echo(outcome.lessons_learned)
+
+
+@signals.command()
+def performance():
+    """Show signal performance summary"""
+    from src.signals.signal_tracker import SignalTracker
+
+    tracker = SignalTracker()
+    summary = tracker.get_signal_performance_summary()
+
+    if summary.get('total_signals', 0) == 0:
+        click.echo("No completed signals yet")
+        click.echo("\nGenerate and wait for signals to complete:")
+        click.echo("  python -m src.cli signals scan")
+        return
+
+    click.echo("\nSIGNAL PERFORMANCE SUMMARY:")
+    click.echo("=" * 60)
+
+    click.echo(f"\nOverall:")
+    click.echo(f"  Total Signals: {summary['total_signals']}")
+    click.echo(f"  Successful: {summary['successful_signals']}")
+    click.echo(f"  Unsuccessful: {summary['unsuccessful_signals']}")
+
+    success_rate = summary['success_rate']
+    color = 'green' if success_rate >= 60 else 'yellow' if success_rate >= 40 else 'red'
+    click.secho(f"  Success Rate: {success_rate:.1f}%", fg=color, bold=True)
+
+    click.echo(f"\nReturns:")
+    click.echo(f"  Avg Gain (Winners): {summary['avg_gain_winners']:+.1f}%")
+    click.echo(f"  Avg Loss (Losers): {summary['avg_loss_losers']:+.1f}%")
+
+    click.echo(f"\nBy Timeframe:")
+    click.echo(f"  Short-term: {summary['short_term']['success_rate']:.1f}% "
+              f"({summary['short_term']['successful']}/{summary['short_term']['total']})")
+    click.echo(f"  Long-term:  {summary['long_term']['success_rate']:.1f}% "
+              f"({summary['long_term']['successful']}/{summary['long_term']['total']})")
+
+
+# ============================================================================
+# MONITORING COMMANDS (Phase 2)
+# ============================================================================
+
+@cli.group()
+def monitor():
+    """Portfolio monitoring and alerts"""
+    pass
+
+
+@monitor.command()
+def run():
+    """Run portfolio monitoring"""
+    from src.portfolio.portfolio_monitor import PortfolioMonitor
+
+    click.echo("Running portfolio monitoring...")
+    click.echo()
+
+    monitor = PortfolioMonitor()
+    results = monitor.monitor_all_positions()
+
+    if not results:
+        click.echo("No positions to monitor")
+        click.echo("\nAdd a position first:")
+        click.echo("  python -m src.cli portfolio add AAPL 10 150.00")
+        return
+
+    click.echo(f"MONITORING RESULTS ({len(results)} positions):")
+    click.echo("=" * 80)
+
+    for r in results:
+        risk_level = r['risk_level'].upper()
+
+        if risk_level == 'CRITICAL':
+            color = 'red'
+            symbol = '🔴'
+        elif risk_level == 'HIGH':
+            color = 'red'
+            symbol = '🟠'
+        elif risk_level == 'MEDIUM':
+            color = 'yellow'
+            symbol = '🟡'
+        else:
+            color = 'green'
+            symbol = '🟢'
+
+        click.echo(f"\n{symbol} {r['ticker']} - {click.style(risk_level, fg=color)} RISK")
+        click.echo(f"  Risk Score: {r['risk_score']:.0f}/100")
+        click.echo(f"  Action: {r['action_recommended']}")
+
+        if r['alert_generated']:
+            click.secho(f"  ⚠️  ALERT GENERATED!", fg='yellow', bold=True)
+
+        if r['risk_factors']:
+            click.echo(f"  Top Risk Factors:")
+            for factor in r['risk_factors'][:3]:
+                click.echo(f"    • {factor}")
+
+        if r['alternatives']:
+            click.echo(f"  Suggested Alternatives: {', '.join(r['alternatives'])}")
+
+
+@monitor.command()
+@click.option('--min-risk', type=click.Choice(['low', 'medium', 'high', 'critical']), default='medium')
+def alerts(min_risk):
+    """Show current portfolio alerts"""
+    from src.portfolio.portfolio_monitor import PortfolioMonitor
+
+    monitor = PortfolioMonitor()
+    alerts_list = monitor.get_all_alerts(min_risk_level=min_risk)
+
+    if not alerts_list:
+        click.secho(f"\n✓ No {min_risk}+ risk alerts", fg='green')
+        click.echo("All positions within acceptable risk levels")
+        return
+
+    click.echo(f"\nACTIVE ALERTS ({len(alerts_list)} positions):")
+    click.echo("=" * 80)
+
+    for alert in alerts_list:
+        risk_level = alert['risk_level'].upper()
+
+        if risk_level == 'CRITICAL':
+            symbol = '🔴'
+            color = 'red'
+        elif risk_level == 'HIGH':
+            symbol = '🟠'
+            color = 'red'
+        else:
+            symbol = '🟡'
+            color = 'yellow'
+
+        click.echo(f"\n{symbol} {alert['ticker']} - {click.style(risk_level, fg=color, bold=True)}")
+        click.echo(f"  Risk Score: {alert['risk_score']:.0f}/100")
+        click.echo(f"  Action: {alert['action']}")
+        click.echo(f"  Current Price: ${alert['current_price']:.2f}")
+
+        if alert['unrealized_pnl']:
+            pnl_color = 'green' if alert['unrealized_pnl'] > 0 else 'red'
+            click.secho(f"  Current P&L: {alert['unrealized_pnl']:+.1f}%", fg=pnl_color)
+
+        click.echo(f"\n  Summary:")
+        for line in alert['summary'].split('\n')[:5]:
+            click.echo(f"  {line}")
+
+
+# ============================================================================
 # UTILITY COMMANDS
 # ============================================================================
 
@@ -544,7 +1063,36 @@ def test():
     except Exception as e:
         click.secho(f"   ✗ Sentiment analysis failed: {e}", fg='red')
 
-    click.echo("\nTest complete!")
+    # Test 6: Signal generator (Phase 2)
+    click.echo("\n6. Testing signal generator...")
+    try:
+        from src.signals.signal_generator import SignalGenerator
+        generator = SignalGenerator()
+        click.secho(f"   ✓ Signal generator loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Signal generator failed: {e}", fg='red')
+
+    # Test 7: Portfolio manager (Phase 2)
+    click.echo("\n7. Testing portfolio manager...")
+    try:
+        from src.portfolio.portfolio_manager import PortfolioManager
+        manager = PortfolioManager()
+        click.secho(f"   ✓ Portfolio manager loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Portfolio manager failed: {e}", fg='red')
+
+    # Test 8: Portfolio monitor (Phase 2)
+    click.echo("\n8. Testing portfolio monitor...")
+    try:
+        from src.portfolio.portfolio_monitor import PortfolioMonitor
+        monitor = PortfolioMonitor()
+        click.secho(f"   ✓ Portfolio monitor loaded", fg='green')
+    except Exception as e:
+        click.secho(f"   ✗ Portfolio monitor failed: {e}", fg='red')
+
+    click.echo("\n" + "=" * 60)
+    click.echo("Phase 1 & 2 tests complete!")
+    click.echo("=" * 60)
 
 
 # ============================================================================
