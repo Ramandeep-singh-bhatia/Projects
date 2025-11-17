@@ -1,5 +1,6 @@
 package com.fittracker.user.service;
 
+import com.fittracker.common.event.UserRegisteredEvent;
 import com.fittracker.common.exception.BadRequestException;
 import com.fittracker.common.exception.UnauthorizedException;
 import com.fittracker.user.config.JwtService;
@@ -8,6 +9,7 @@ import com.fittracker.user.dto.LoginRequest;
 import com.fittracker.user.dto.RegisterRequest;
 import com.fittracker.user.entity.Role;
 import com.fittracker.user.entity.User;
+import com.fittracker.user.kafka.EventPublisher;
 import com.fittracker.user.repository.RoleRepository;
 import com.fittracker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
+    private final EventPublisher eventPublisher;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
@@ -68,6 +71,15 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         log.info("User registered successfully with ID: {}", savedUser.getId());
+
+        // Publish UserRegisteredEvent
+        UserRegisteredEvent event = UserRegisteredEvent.create(
+                savedUser.getId(),
+                savedUser.getEmail(),
+                savedUser.getFirstName(),
+                savedUser.getLastName()
+        );
+        eventPublisher.publishUserRegisteredEvent(event);
 
         // Generate tokens
         UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getEmail());
