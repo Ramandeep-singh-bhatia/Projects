@@ -1,10 +1,12 @@
 package com.fittracker.user.service;
 
+import com.fittracker.common.event.UserWeightUpdatedEvent;
 import com.fittracker.common.exception.ResourceNotFoundException;
 import com.fittracker.user.dto.WeightHistoryDto;
 import com.fittracker.user.dto.WeightHistoryRequest;
 import com.fittracker.user.entity.User;
 import com.fittracker.user.entity.WeightHistory;
+import com.fittracker.user.kafka.EventPublisher;
 import com.fittracker.user.repository.UserRepository;
 import com.fittracker.user.repository.WeightHistoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class WeightHistoryService {
 
     private final WeightHistoryRepository weightHistoryRepository;
     private final UserRepository userRepository;
+    private final EventPublisher eventPublisher;
 
     @Transactional
     public WeightHistoryDto logWeight(Long userId, WeightHistoryRequest request) {
@@ -42,6 +45,14 @@ public class WeightHistoryService {
 
         WeightHistory saved = weightHistoryRepository.save(weightHistory);
         log.info("Weight logged for user {}: {} kg", userId, request.getWeightKg());
+
+        // Publish UserWeightUpdatedEvent
+        UserWeightUpdatedEvent event = UserWeightUpdatedEvent.create(
+                userId,
+                request.getWeightKg(),
+                saved.getRecordedAt().toLocalDate()
+        );
+        eventPublisher.publishUserWeightUpdatedEvent(event);
 
         return toDto(saved);
     }
