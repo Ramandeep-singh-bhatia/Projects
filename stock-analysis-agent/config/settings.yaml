@@ -1,0 +1,415 @@
+# Stock Analysis Agent - Configuration Settings
+# All using FREE tools and APIs
+
+# =============================================================================
+# SCANNING CONFIGURATION
+# =============================================================================
+scanning:
+  news:
+    interval_minutes: 30  # How often to scan for news
+    max_articles_per_scan: 50
+    lookback_hours: 24  # How far back to look for news
+
+  market_data:
+    interval_minutes: 15  # How often to update stock prices
+    use_cache: true
+    cache_duration_minutes: 10
+
+  portfolio:
+    monitor_interval_minutes: 60  # How often to check portfolio positions
+    deep_analysis_hours: [9, 12, 15, 18]  # When to run deep analysis (market hours)
+
+# =============================================================================
+# DATA SOURCES (All FREE)
+# =============================================================================
+data_sources:
+  # yfinance - Unlimited, FREE
+  yfinance:
+    enabled: true
+    timeout_seconds: 10
+    retry_attempts: 3
+
+  # RSS Feeds - Unlimited, FREE, no API key
+  rss_feeds:
+    enabled: true
+    sources:
+      - name: "Bloomberg Markets"
+        url: "https://feeds.bloomberg.com/markets/news.rss"
+        priority: high
+      - name: "CNBC Top News"
+        url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"
+        priority: high
+      - name: "MarketWatch"
+        url: "https://www.marketwatch.com/rss/topstories"
+        priority: medium
+      - name: "Reuters Business"
+        url: "https://news.google.com/rss/search?q=when:24h+allinurl:reuters.com&hl=en-US&gl=US&ceid=US:en"
+        priority: medium
+      - name: "Seeking Alpha"
+        url: "https://seekingalpha.com/feed.xml"
+        priority: medium
+    update_interval_minutes: 30
+
+  # NewsAPI - 100 requests/day FREE
+  newsapi:
+    enabled: true
+    daily_limit: 100
+    rate_limit_per_minute: 5
+    keywords:
+      - "earnings"
+      - "merger"
+      - "acquisition"
+      - "FDA approval"
+      - "contract win"
+      - "breakthrough"
+
+  # Alpha Vantage - 25 requests/day, 5/minute FREE
+  alpha_vantage:
+    enabled: true
+    daily_limit: 25
+    rate_limit_per_minute: 5
+    use_only_for:  # Use sparingly - only when needed
+      - "technical_indicators"
+      - "company_overview"
+
+  # Financial Modeling Prep - 250 requests/day FREE
+  fmp:
+    enabled: true
+    daily_limit: 250
+    rate_limit_per_minute: 10
+
+  # SEC EDGAR - Unlimited, FREE, no API key
+  sec_edgar:
+    enabled: true
+    filings: ["8-K", "10-Q", "10-K", "4"]
+    user_agent: "Stock Analysis Agent educational@example.com"
+
+# =============================================================================
+# SENTIMENT ANALYSIS (Local models - FREE)
+# =============================================================================
+sentiment:
+  # Use local models - no API costs
+  primary_model: "vader"  # Fast, free, good for financial text
+  secondary_model: "textblob"  # Backup validation
+
+  # Optional: Use small transformers models (free, runs locally)
+  use_transformers: false  # Set to true for better accuracy (slower)
+  transformer_model: "ProsusAI/finbert"  # Financial sentiment model
+
+  # Sentiment thresholds
+  positive_threshold: 0.3
+  negative_threshold: -0.3
+  strong_sentiment_threshold: 0.6
+
+  # Impact assessment
+  impact_multipliers:
+    earnings: 1.5
+    merger_acquisition: 2.0
+    fda_approval: 2.5
+    contract_win: 1.3
+    product_launch: 1.2
+    analyst_upgrade: 1.1
+    insider_trading: 0.8
+
+# =============================================================================
+# SIGNAL GENERATION
+# =============================================================================
+signals:
+  short_term:
+    timeframe_days: [3, 7, 14]
+    min_confidence: 60
+    min_expected_gain: 2.0
+    max_signals_per_day: 10
+
+  long_term:
+    timeframe_days: [30, 90, 180]
+    min_confidence: 70
+    min_expected_gain: 5.0
+    max_signals_per_day: 5
+
+  # Confidence scoring weights
+  confidence_factors:
+    sentiment_strength: 0.25
+    news_source_credibility: 0.20
+    market_context: 0.15
+    technical_indicators: 0.15
+    volume_confirmation: 0.10
+    sector_momentum: 0.10
+    historical_pattern_match: 0.05
+
+  # Risk assessment weights
+  risk_factors:
+    volatility: 0.30
+    market_cap: 0.20
+    sector_stability: 0.20
+    news_uncertainty: 0.15
+    technical_weakness: 0.15
+
+# =============================================================================
+# SUCCESS VALIDATION
+# =============================================================================
+validation:
+  short_term:
+    min_gain_percentage: 2.0
+    sustainability_hours: 24
+    check_intervals_hours: [1, 6, 12, 24, 48]
+
+  long_term:
+    min_gain_percentage: 5.0
+    sustainability_hours: 48
+    check_intervals_hours: [24, 72, 168, 336, 720]  # 1d, 3d, 1w, 2w, 1m
+
+  # Outcome classification
+  success_levels:
+    strong: 10.0  # >10% gain
+    moderate: 5.0  # 5-10% gain
+    weak: 2.0     # 2-5% gain
+
+  failure_conditions:
+    - "price_drops_below_entry"
+    - "no_movement_within_timeframe"
+    - "gain_not_sustained"
+    - "stop_loss_triggered"
+
+# =============================================================================
+# PORTFOLIO MONITORING
+# =============================================================================
+portfolio:
+  risk_scoring:
+    # Multi-factor risk model
+    factors:
+      price_drop_1h: 0.15
+      price_drop_24h: 0.20
+      volume_spike: 0.10
+      negative_news: 0.25
+      technical_breakdown: 0.15
+      sector_weakness: 0.10
+      insider_selling: 0.05
+
+  alert_thresholds:
+    critical: 80    # Immediate action needed
+    high: 60        # Exit within 24-48 hours
+    medium: 40      # Monitor closely
+    low: 20         # Watch for developments
+
+  # Protection rules
+  stop_loss_defaults:
+    short_term: 5.0   # 5% stop loss
+    long_term: 10.0   # 10% stop loss
+
+  # Monitoring frequency by risk level
+  monitoring_frequency:
+    critical: 15    # Every 15 minutes
+    high: 60        # Every hour
+    medium: 240     # Every 4 hours
+    low: 1440       # Daily
+
+# =============================================================================
+# LEARNING SYSTEM
+# =============================================================================
+learning:
+  # How often to run learning analysis
+  analysis_frequency: "weekly"
+
+  # Minimum samples for pattern recognition
+  min_sample_size: 10
+
+  # Pattern confidence thresholds
+  pattern_min_success_rate: 0.65
+  pattern_min_occurrences: 5
+
+  # Adaptive weights
+  weight_adjustment_rate: 0.1  # How fast to adapt (0.1 = 10% adjustment)
+  confidence_calibration_window: 30  # Days to look back
+
+  # Backtesting
+  backtest_start_year: 2020
+  backtest_end_year: 2024
+  min_backtest_samples: 50
+
+# =============================================================================
+# DASHBOARD
+# =============================================================================
+dashboard:
+  host: "0.0.0.0"
+  port: 8000
+  debug: true
+  auto_reload: true
+
+  # Update frequencies
+  realtime_update_seconds: 30
+  chart_update_seconds: 60
+
+  # Display settings
+  max_signals_displayed: 50
+  max_news_items: 100
+  chart_history_days: 90
+
+  # Themes
+  default_theme: "dark"
+  color_scheme:
+    success: "#10b981"
+    warning: "#f59e0b"
+    danger: "#ef4444"
+    info: "#3b82f6"
+
+# =============================================================================
+# NOTIFICATIONS (All FREE)
+# =============================================================================
+notifications:
+  # Desktop notifications (completely free)
+  desktop:
+    enabled: true
+    critical_only: false
+
+  # File-based alerts (completely free)
+  file_alerts:
+    enabled: true
+    path: "logs/alerts.json"
+    append: true
+
+  # Email (using free Gmail SMTP)
+  email:
+    enabled: false  # Enable in .env file
+    critical_only: true
+    batch_interval_minutes: 60  # Batch non-critical alerts
+
+  # Alert types to send
+  alert_types:
+    new_signal: true
+    portfolio_risk: true
+    signal_outcome: true
+    learning_insight: true
+    system_error: true
+
+# =============================================================================
+# CACHING (To minimize API usage)
+# =============================================================================
+caching:
+  enabled: true
+
+  stock_prices:
+    duration_minutes: 10
+
+  news_articles:
+    duration_minutes: 60
+
+  company_info:
+    duration_hours: 24
+
+  technical_indicators:
+    duration_hours: 1
+
+  sentiment_scores:
+    duration_hours: 6
+
+# =============================================================================
+# RATE LIMITING (To stay within free tiers)
+# =============================================================================
+rate_limiting:
+  # Global rate limiter
+  enabled: true
+
+  # API-specific limits
+  newsapi:
+    requests_per_day: 90  # Leave buffer (limit is 100)
+    requests_per_minute: 5
+
+  alpha_vantage:
+    requests_per_day: 20  # Leave buffer (limit is 25)
+    requests_per_minute: 4
+
+  fmp:
+    requests_per_day: 200  # Leave buffer (limit is 250)
+    requests_per_minute: 10
+
+  # Backoff strategy
+  retry_attempts: 3
+  backoff_multiplier: 2
+  max_backoff_seconds: 60
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+logging:
+  level: "INFO"
+  format: "detailed"
+
+  files:
+    scanner: "logs/scanner.log"
+    signals: "logs/signals.log"
+    portfolio: "logs/portfolio.log"
+    learning: "logs/learning.log"
+    errors: "logs/errors.log"
+    api_calls: "logs/api_calls.log"
+
+  rotation:
+    max_bytes: 10485760  # 10MB
+    backup_count: 5
+
+  # Track API usage
+  track_api_usage: true
+
+# =============================================================================
+# TECHNICAL INDICATORS (When using Alpha Vantage sparingly)
+# =============================================================================
+technical_indicators:
+  # Only calculate when really needed (to save API calls)
+  calculate_on_demand: true
+
+  indicators:
+    - "RSI"
+    - "MACD"
+    - "SMA_20"
+    - "SMA_50"
+    - "SMA_200"
+    - "BB"  # Bollinger Bands
+    - "VOLUME_AVG"
+
+  # Thresholds for signals
+  rsi:
+    overbought: 70
+    oversold: 30
+  macd:
+    strong_signal: 2.0
+
+# =============================================================================
+# MARKET HOURS (For timing scans effectively)
+# =============================================================================
+market_hours:
+  timezone: "America/New_York"
+
+  regular:
+    open: "09:30"
+    close: "16:00"
+
+  pre_market:
+    start: "04:00"
+    end: "09:30"
+
+  after_hours:
+    start: "16:00"
+    end: "20:00"
+
+  # When to be most active
+  peak_scanning_hours: ["09:00", "09:30", "12:00", "16:00"]
+
+  # Weekend/holiday handling
+  scan_on_weekends: false
+  scan_on_holidays: false
+
+# =============================================================================
+# DISCLAIMERS (Always visible)
+# =============================================================================
+disclaimers:
+  show_on_startup: true
+  show_on_dashboard: true
+  show_on_signals: true
+
+  text: |
+    EDUCATIONAL TOOL ONLY
+    This system is for learning purposes only.
+    NOT financial advice. NOT for actual trading decisions.
+    Always consult qualified financial advisors.
+    Past performance does not guarantee future results.
+    Stock investing carries substantial risk of loss.
