@@ -10,7 +10,7 @@ faiss-cpu==1.7.4
 # Web Frameworks
 fastapi==0.109.0
 uvicorn==0.27.0
-streamlit==1.30.0
+streamlit==1.37.0
 
 # Data Validation and Models
 pydantic==2.5.0
