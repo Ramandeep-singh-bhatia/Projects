@@ -53,7 +53,7 @@ scipy==1.11.4
 
 # NLP
 spacy==3.7.2
-nltk==3.8.1
+nltk==3.9
 
 # Utilities
 python-dotenv==1.0.0
