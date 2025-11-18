@@ -7,6 +7,13 @@ import PrivateRoute from './components/auth/PrivateRoute';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
+import ProfilePage from './pages/profile/ProfilePage';
+import EditProfilePage from './pages/profile/EditProfilePage';
+import ChangePasswordPage from './pages/profile/ChangePasswordPage';
+import NutritionPage from './pages/nutrition/NutritionPage';
+import WorkoutsPage from './pages/workouts/WorkoutsPage';
+import AnalyticsPage from './pages/analytics/AnalyticsPage';
+import SettingsPage from './pages/settings/SettingsPage';
 
 // Create Material-UI theme
 const theme = createTheme({
@@ -92,6 +99,62 @@ const App: React.FC = () => {
             element={
               <PrivateRoute>
                 <DashboardPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile/edit"
+            element={
+              <PrivateRoute>
+                <EditProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile/change-password"
+            element={
+              <PrivateRoute>
+                <ChangePasswordPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/nutrition"
+            element={
+              <PrivateRoute>
+                <NutritionPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/workouts"
+            element={
+              <PrivateRoute>
+                <WorkoutsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <PrivateRoute>
+                <AnalyticsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <PrivateRoute>
+                <SettingsPage />
               </PrivateRoute>
             }
           />
