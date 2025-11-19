@@ -306,6 +306,120 @@ CREATE TABLE IF NOT EXISTS annual_reports (
     growth_summary TEXT
 );
 
+-- MANUAL ENTRY & EVALUATION FEATURES
+
+-- Manually Added Books: Track books added outside app recommendations
+CREATE TABLE IF NOT EXISTS manually_added_books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    source_of_recommendation TEXT, -- 'friend', 'online', 'bookstore', 'other'
+    recommender_name TEXT,
+    why_read TEXT,
+    was_outside_comfort_zone BOOLEAN DEFAULT 0,
+    ai_analysis_complete BOOLEAN DEFAULT 0,
+    profile_impact_calculated BOOLEAN DEFAULT 0,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+
+-- Book Analysis: AI-generated deep analysis of books
+CREATE TABLE IF NOT EXISTS book_analysis (
+    book_id INTEGER PRIMARY KEY,
+    complexity_score INTEGER CHECK(complexity_score BETWEEN 1 AND 10),
+    themes TEXT, -- JSON array
+    mood_tags TEXT, -- JSON object: {energy, pacing, tone, complexity}
+    writing_style TEXT,
+    similar_books TEXT, -- JSON array of book IDs
+    reader_level TEXT, -- 'beginner', 'intermediate', 'advanced'
+    content_warnings TEXT, -- JSON array
+    character_vs_plot_score REAL, -- -1 (plot) to 1 (character)
+    narrative_structure TEXT,
+    analysis_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+
+-- External Recommendations: Track recommendations from outside the app
+CREATE TABLE IF NOT EXISTS external_recommendations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    recommender_type TEXT CHECK(recommender_type IN ('friend', 'family', 'online', 'critic', 'bookclub', 'other')),
+    recommender_name TEXT,
+    recommendation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    recommendation_context TEXT,
+    trust_score REAL DEFAULT 0.5 CHECK(trust_score BETWEEN 0 AND 1),
+    match_accuracy REAL, -- Set after reading, comparing to reading DNA
+    was_good_match BOOLEAN,
+    notes TEXT,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+
+-- Future Reads: Books user wants to read but isn't ready for yet
+CREATE TABLE IF NOT EXISTS future_reads (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    recommended_by TEXT,
+    current_readiness_score INTEGER CHECK(current_readiness_score BETWEEN 0 AND 100),
+    target_readiness_score INTEGER DEFAULT 75 CHECK(target_readiness_score BETWEEN 0 AND 100),
+    estimated_ready_date DATE,
+    preparation_plan_id INTEGER,
+    reason_deferred TEXT,
+    user_notes TEXT,
+    reminder_preference TEXT CHECK(reminder_preference IN ('when_ready', 'monthly', 'quarterly', 'never')) DEFAULT 'when_ready',
+    status TEXT CHECK(status IN ('waiting', 'preparing', 'ready', 'moved_to_reading', 'abandoned')) DEFAULT 'waiting',
+    last_checked TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE,
+    FOREIGN KEY (preparation_plan_id) REFERENCES reading_plans(id) ON DELETE SET NULL
+);
+
+-- Readiness Checkpoints: Monitor progression toward future books
+CREATE TABLE IF NOT EXISTS readiness_checkpoints (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    future_read_id INTEGER NOT NULL,
+    checkpoint_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    readiness_score INTEGER CHECK(readiness_score BETWEEN 0 AND 100),
+    factors_assessed TEXT, -- JSON object with breakdown
+    gaps_identified TEXT, -- JSON array: ['needs more fantasy exposure', 'complexity too high']
+    progress_since_last REAL,
+    books_that_helped TEXT, -- JSON array of book IDs that improved readiness
+    ai_insights TEXT,
+    FOREIGN KEY (future_read_id) REFERENCES future_reads(id) ON DELETE CASCADE
+);
+
+-- Book Interactions: Unified tracking of all book interactions
+CREATE TABLE IF NOT EXISTS book_interactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    interaction_type TEXT CHECK(interaction_type IN ('searched', 'viewed', 'added_to_read', 'evaluated', 'started', 'completed', 'dnf', 'rated', 'noted', 'recommended')),
+    interaction_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    interaction_context TEXT, -- JSON with additional data
+    session_id TEXT,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+
+-- Reading History Complete: Comprehensive reading history with enriched data
+CREATE TABLE IF NOT EXISTS reading_history_complete (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL,
+    status TEXT NOT NULL CHECK(status IN ('to_read', 'reading', 'completed', 'dnf')),
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_started TIMESTAMP,
+    date_completed TIMESTAMP,
+    rating INTEGER CHECK(rating >= 1 AND rating <= 5),
+    how_discovered TEXT, -- 'app_recommendation', 'manual_add', 'friend', etc.
+    discovery_source_id INTEGER, -- Links to recommendation or external_recommendation
+    was_in_comfort_zone BOOLEAN,
+    exceeded_expectations BOOLEAN,
+    complexity_match TEXT, -- 'too_easy', 'just_right', 'too_hard'
+    mood_at_start TEXT, -- JSON of mood selections
+    mood_at_end TEXT, -- JSON of mood after reading
+    profile_alignment_score REAL, -- 0-1, how well it matched reading DNA
+    contributed_to_growth BOOLEAN,
+    notes TEXT,
+    FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+
 -- Create indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_books_genre ON books(genre);
 CREATE INDEX IF NOT EXISTS idx_books_isbn ON books(isbn);
@@ -324,3 +438,16 @@ CREATE INDEX IF NOT EXISTS idx_vocabulary_next_review ON vocabulary(next_review_
 CREATE INDEX IF NOT EXISTS idx_reading_notes_book_id ON reading_notes(book_id);
 CREATE INDEX IF NOT EXISTS idx_reading_sessions_book_id ON reading_sessions(book_id);
 CREATE INDEX IF NOT EXISTS idx_reading_sessions_date ON reading_sessions(session_date);
+CREATE INDEX IF NOT EXISTS idx_manually_added_books_book_id ON manually_added_books(book_id);
+CREATE INDEX IF NOT EXISTS idx_manually_added_books_source ON manually_added_books(source_of_recommendation);
+CREATE INDEX IF NOT EXISTS idx_external_recommendations_book_id ON external_recommendations(book_id);
+CREATE INDEX IF NOT EXISTS idx_external_recommendations_type ON external_recommendations(recommender_type);
+CREATE INDEX IF NOT EXISTS idx_future_reads_book_id ON future_reads(book_id);
+CREATE INDEX IF NOT EXISTS idx_future_reads_status ON future_reads(status);
+CREATE INDEX IF NOT EXISTS idx_future_reads_readiness ON future_reads(current_readiness_score);
+CREATE INDEX IF NOT EXISTS idx_readiness_checkpoints_future_read ON readiness_checkpoints(future_read_id);
+CREATE INDEX IF NOT EXISTS idx_book_interactions_book_id ON book_interactions(book_id);
+CREATE INDEX IF NOT EXISTS idx_book_interactions_type ON book_interactions(interaction_type);
+CREATE INDEX IF NOT EXISTS idx_book_interactions_date ON book_interactions(interaction_date);
+CREATE INDEX IF NOT EXISTS idx_reading_history_complete_book_id ON reading_history_complete(book_id);
+CREATE INDEX IF NOT EXISTS idx_reading_history_complete_status ON reading_history_complete(status);
