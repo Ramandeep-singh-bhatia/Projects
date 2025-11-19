@@ -1,15 +1,20 @@
 # AI-Powered English Learning Application
 
-A comprehensive, AI-powered English learning application designed to help non-native speakers improve their speaking and writing skills through interactive, contextual learning.
+A comprehensive, intelligent AI-powered English learning system that adapts to YOU. Goes beyond traditional learning apps with contextual memory, pattern recognition, personalized recommendations, and micro-learning features.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-18.2.0-61dafb.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D16.0.0-green.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
+
+> **NEW!** 🎉 **Phase 1 Advanced Features** now available! See [ADVANCED_FEATURES.md](./ADVANCED_FEATURES.md) for comprehensive documentation on contextual memory, pattern recognition, AI recommendations, flexible streaks, and micro-learning.
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
+  - [Core Features](#core-features)
+  - [🆕 Advanced Features (Phase 1)](#-advanced-features-phase-1)
 - [Technology Stack](#technology-stack)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -43,7 +48,9 @@ This application addresses the common challenges faced by non-native English spe
 
 ## Features
 
-### 🎯 Adaptive Learning System
+### Core Features
+
+#### 🎯 Adaptive Learning System
 - Baseline assessment to gauge current level
 - Intelligently adapts difficulty based on performance
 - Tracks weak areas and creates targeted exercises
@@ -105,6 +112,68 @@ This application addresses the common challenges faced by non-native English spe
 - Spaced repetition algorithm
 - Quick 5-minute review sessions
 - Mistakes journal with explanations
+
+---
+
+### 🆕 Advanced Features (Phase 1)
+
+**The app now includes intelligent systems that learn from you and adapt to your needs:**
+
+#### 🧠 Contextual Memory System
+- **Personal Contexts**: Organize vocabulary by YOUR life (Work, Hobbies, Family, Social, etc.)
+- **Context Cards**: Rich vocabulary cards with your own examples and usage scenarios
+- **Smart Associations**: Link words to relevant contexts automatically
+- **Word Relationships**: Visual maps of synonyms, antonyms, and word families
+- **Register Awareness**: Learn formal vs. informal variants of the same meaning
+
+#### 📊 Pattern Recognition & Error Correction
+- **Automatic Pattern Detection**: Identifies recurring mistakes (articles, prepositions, tenses, etc.)
+- **Severity Assessment**: Critical → Important → Moderate → Minor classification
+- **Before/After Showcase**: See your original vs. corrected with explanations
+- **Correction Strategies**: Specific tips for each error pattern
+- **Improvement Tracking**: Monitor error reduction over time
+- **Avoidance Detection**: Find words you learned but never use
+- **Overuse Detection**: Identify phrases you rely on too much
+
+#### 🎯 Smart Practice Recommendations
+- **AI Coach**: Personalized suggestions on what to practice next
+- **Priority System**: Critical/High/Medium/Low urgency recommendations
+- **10 Recommendation Types**: Focus, difficulty, balance, review, vocabulary, errors, time, energy, milestones, recovery
+- **Adaptive Intelligence**: Learns from your patterns and adjusts
+- **One-Click Actions**: Act on recommendations immediately
+
+#### 🔥 Flexible Streak System
+- **2 Freeze Days/Month**: Life happens, don't break your streak
+- **Smart Maintenance**: Use a freeze day within 1 missed day
+- **Auto-Reset**: Freeze days refresh monthly
+- **No Guilt**: Build consistency without stress
+- **Total Stats**: Track longest streak and total practice days
+
+#### ⚡ Micro-Learning Features
+- **3-Minute Power Lessons**: Full lessons in 3 minutes (vocab, grammar, speaking, writing)
+- **Quick Practice Exercises**: 2-5 minute focused drills
+- **Voice Journal**: Daily speaking practice with prompts
+- **Screenshot Description**: Describe objects/scenes for vocabulary practice
+- **Waiting Room Practice**: Ultra-quick exercises (1-2 min) for busy moments
+- **AI-Generated Content**: Fresh lessons every time
+
+#### 🏆 Enhanced Motivation & Gamification
+- **Daily Wins Tracker**: Record and celebrate small victories
+- **13 Achievement Types**: Unlock badges for various accomplishments
+- **Milestone Progress**: Visual progress toward goals (100 words, 30-day streak, etc.)
+- **Progress Stories**: "Then vs Now" comparisons showing improvement
+- **Emotional Tracking**: Rate how proud you are of each win (1-10)
+
+#### 📈 Advanced Analytics
+- **Learning Velocity**: How fast you master new concepts
+- **Retention Heatmap**: Visual calendar of what you remember
+- **Time Optimization**: Best practice times based on your performance
+- **Session Performance**: Track focus quality and energy levels
+- **Skill Radar Chart**: Visual skill balance at a glance
+
+**📖 Comprehensive Documentation**: See [ADVANCED_FEATURES.md](./ADVANCED_FEATURES.md) for detailed technical documentation, usage examples, and integration guides.
+
+---
 
 ## Technology Stack
 
