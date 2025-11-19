@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext js,jsx",
-    "init-db": "node database/init-db.js"
+    "init-db": "node database/init-db.js",
+    "init-db-advanced": "node database/init-db-advanced.js"
   },
   "dependencies": {
     "react": "^18.2.0",
