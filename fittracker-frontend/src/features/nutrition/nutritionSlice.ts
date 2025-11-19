@@ -7,6 +7,7 @@ interface NutritionState {
   meals: Meal[];
   currentDate: string;
   dailySummary: NutritionSummary | null;
+  weeklySummary: NutritionSummary[];
   loading: boolean;
   error: string | null;
 }
@@ -15,6 +16,7 @@ const initialState: NutritionState = {
   meals: [],
   currentDate: new Date().toISOString().split('T')[0],
   dailySummary: null,
+  weeklySummary: [],
   loading: false,
   error: null,
 };
@@ -38,6 +40,17 @@ export const fetchDailySummary = createAsyncThunk(
       return await nutritionService.getDailySummary(date);
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch summary');
+    }
+  }
+);
+
+export const fetchWeeklySummary = createAsyncThunk(
+  'nutrition/fetchWeeklySummary',
+  async (startDate: string, { rejectWithValue }) => {
+    try {
+      return await nutritionService.getWeeklySummary(startDate);
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to fetch weekly summary');
     }
   }
 );
@@ -115,6 +128,19 @@ const nutritionSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
+      // Fetch weekly summary
+      .addCase(fetchWeeklySummary.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchWeeklySummary.fulfilled, (state, action) => {
+        state.loading = false;
+        state.weeklySummary = action.payload;
+      })
+      .addCase(fetchWeeklySummary.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
       // Create meal
       .addCase(createMeal.pending, (state) => {
         state.loading = true;
@@ -148,6 +174,7 @@ export const { setCurrentDate, clearError } = nutritionSlice.actions;
 export const selectMeals = (state: RootState) => state.nutrition.meals;
 export const selectCurrentDate = (state: RootState) => state.nutrition.currentDate;
 export const selectDailySummary = (state: RootState) => state.nutrition.dailySummary;
+export const selectWeeklySummary = (state: RootState) => state.nutrition.weeklySummary;
 export const selectNutritionLoading = (state: RootState) => state.nutrition.loading;
 export const selectNutritionError = (state: RootState) => state.nutrition.error;
 
