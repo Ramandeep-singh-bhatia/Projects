@@ -1,0 +1,153 @@
+/* My Books Page Styles */
+.my-books-page {
+  padding: 1rem;
+}
+
+.my-books-page h1 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #7f8c8d;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.tab:hover {
+  color: #3498db;
+}
+
+.tab.active {
+  color: #3498db;
+  border-bottom-color: #3498db;
+}
+
+.books-content {
+  min-height: 400px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #7f8c8d;
+}
+
+.empty-state p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.books-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.book-card-full {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  display: flex;
+  gap: 1.5rem;
+}
+
+.book-card-full .book-cover {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.book-info-full {
+  flex: 1;
+}
+
+.book-info-full h3 {
+  color: #2c3e50;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.book-info-full .author {
+  color: #7f8c8d;
+  font-style: italic;
+  margin: 0 0 1rem 0;
+}
+
+.date-info {
+  color: #555;
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.duration {
+  color: #3498db;
+  font-weight: 500;
+  margin: 0.5rem 0;
+}
+
+.rating {
+  color: #f39c12;
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.notes {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.notes strong {
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.notes p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.ai-summary {
+  background: #e3f2fd;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  border-left: 4px solid #2196f3;
+}
+
+.ai-summary strong {
+  color: #1976d2;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ai-summary p {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+}
+
+.book-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
