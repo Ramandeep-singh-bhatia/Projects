@@ -42,9 +42,10 @@ export interface MealItem {
 export interface Meal {
   id: number;
   userId: number;
+  name?: string;
   mealType: MealType;
   mealDate: string;
-  mealTime: string;
+  mealTime?: string;
   notes?: string;
   totalCalories: number;
   totalProtein: number;
@@ -63,12 +64,11 @@ export interface MealItemRequest {
 }
 
 export interface CreateMealRequest {
-  userId: number;
+  name?: string;
   mealType: MealType;
   mealDate: string;
-  mealTime: string;
   notes?: string;
-  items: MealItemRequest[];
+  mealItems: MealItemRequest[];
 }
 
 export interface UpdateMealRequest {
