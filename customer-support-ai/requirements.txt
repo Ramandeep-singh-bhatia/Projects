@@ -1,0 +1,55 @@
+# LangChain and LLM Dependencies
+langchain==0.1.0
+langchain-anthropic==0.1.0
+langchain-openai==0.0.5
+langchain-community==0.0.10
+
+# Vector Database
+faiss-cpu==1.7.4
+
+# Web Frameworks
+fastapi==0.109.0
+uvicorn==0.27.0
+streamlit==1.30.0
+
+# Data Validation and Models
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Environment and Configuration
+python-dotenv==1.0.0
+
+# Document Processing
+PyPDF2==3.0.1
+python-docx==1.1.0
+
+# Data Processing and Visualization
+pandas==2.1.0
+plotly==5.18.0
+
+# Database
+sqlalchemy==2.0.25
+
+# LLM Providers
+anthropic==0.18.0
+openai==1.10.0
+tiktoken==0.5.2
+
+# Utilities
+requests==2.31.0
+aiohttp==3.9.1
+
+# Language Detection and Processing
+langdetect==1.0.9
+pyspellchecker==0.7.2
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.26.0
+
+# Ranking
+rank-bm25==0.2.2
+
+# Additional Utilities
+tenacity==8.2.3

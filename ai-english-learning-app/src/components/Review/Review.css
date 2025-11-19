@@ -1,0 +1,333 @@
+/* Review Page */
+.review-page,
+.mistakes-journal {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.review-header,
+.journal-header {
+  margin-bottom: var(--spacing-xl);
+}
+
+.review-header h1,
+.journal-header h1 {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+.review-header p,
+.journal-header p {
+  color: var(--text-secondary);
+}
+
+/* Tabs */
+.review-tabs {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: var(--spacing-md) var(--spacing-lg);
+  color: var(--text-secondary);
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.tab-button:hover {
+  color: var(--text-primary);
+}
+
+.tab-button.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+/* Review Content */
+.review-content {
+  background-color: var(--bg-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  border: 1px solid var(--border-color);
+}
+
+.review-info {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.review-info h3 {
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-sm);
+}
+
+.vocab-review-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.vocab-review-card {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+}
+
+.vocab-word {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.vocab-mastery {
+  margin-bottom: var(--spacing-md);
+}
+
+.vocab-mastery span {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.mastery-bar {
+  height: 8px;
+  background-color: var(--bg-tertiary);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.mastery-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  border-radius: var(--radius-xl);
+  transition: width var(--transition-slow);
+}
+
+.vocab-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+/* Exercise History */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.history-item:hover {
+  background-color: var(--bg-tertiary);
+}
+
+.history-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.history-details {
+  flex: 1;
+}
+
+.history-type {
+  font-weight: 500;
+  color: var(--text-primary);
+  text-transform: capitalize;
+  margin-bottom: var(--spacing-xs);
+}
+
+.history-date {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}
+
+.history-score {
+  font-weight: 600;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
+}
+
+.empty-state svg {
+  color: var(--text-tertiary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.empty-state h3 {
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.next-review {
+  margin-top: var(--spacing-md);
+  font-size: var(--font-size-sm);
+}
+
+/* Mistakes Journal */
+.mistakes-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.stat-card {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.improvement-icon {
+  color: var(--success-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.mistakes-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.mistake-category {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+}
+
+.category-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  color: var(--primary-color);
+  font-size: var(--font-size-lg);
+}
+
+.count-badge {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--primary-color);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-sm);
+}
+
+.mistake-card {
+  background-color: var(--bg-secondary);
+  border-left: 4px solid var(--warning-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.mistake-card:last-child {
+  margin-bottom: 0;
+}
+
+.mistake-time {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.mistake-original,
+.mistake-corrected,
+.mistake-explanation {
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.mistake-original strong,
+.mistake-corrected strong,
+.mistake-explanation strong {
+  color: var(--text-primary);
+  margin-right: var(--spacing-xs);
+}
+
+.mistake-original {
+  color: var(--danger-color);
+}
+
+.mistake-corrected {
+  color: var(--success-color);
+}
+
+.mistake-explanation {
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .review-tabs {
+    overflow-x: auto;
+  }
+
+  .tab-button {
+    white-space: nowrap;
+  }
+
+  .vocab-review-list {
+    grid-template-columns: 1fr;
+  }
+
+  .mistakes-stats {
+    grid-template-columns: 1fr;
+  }
+}

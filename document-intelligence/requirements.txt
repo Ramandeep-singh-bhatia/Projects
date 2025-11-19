@@ -1,0 +1,89 @@
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-multipart==0.0.18
+
+# Database
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.12.1
+
+# LangChain & AI
+langchain==0.2.5
+langchain-openai==0.0.2
+langchain-community==0.0.10
+openai==1.6.1
+
+# Vector Database
+pinecone-client==3.0.0
+
+# Search & Embeddings
+sentence-transformers==2.2.2
+rank-bm25==0.2.2
+
+# Document Processing
+PyPDF2==3.0.1
+pdfplumber==0.10.3
+python-docx==1.1.0
+openpyxl==3.1.2
+python-pptx==0.6.23
+pytesseract==0.3.10
+Pillow==10.1.0
+python-magic==0.4.27
+
+# Email Processing
+email-validator==2.1.0
+
+# Task Queue
+celery==5.3.4
+redis==5.0.1
+
+# Frontend
+streamlit==1.29.0
+plotly==5.18.0
+pandas==2.1.3
+altair==5.2.0
+
+# Analytics
+scikit-learn==1.5.0
+numpy==1.26.2
+scipy==1.11.4
+
+# NLP
+spacy==3.7.2
+nltk==3.8.1
+
+# Utilities
+python-dotenv==1.0.0
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dateutil==2.8.2
+pytz==2023.3
+tenacity==8.2.3
+
+# Monitoring & Logging
+loguru==0.7.2
+prometheus-client==0.19.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+httpx==0.25.2
+
+# Development
+black==23.12.0
+flake8==6.1.0
+mypy==1.7.1
+pre-commit==3.5.0
+
+# Additional Document Support
+markdown==3.5.1
+beautifulsoup4==4.12.2
+lxml==4.9.3
+textract==1.6.5
+
+# Caching
+python-redis-cache==0.1.1

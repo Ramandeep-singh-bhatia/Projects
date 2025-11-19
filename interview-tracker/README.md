@@ -1,411 +1,362 @@
 # Interview Preparation Tracker
 
-A comprehensive full-stack application to track your interview preparation progress across Data Structures & Algorithms (DSA), High-Level Design (HLD), Low-Level Design (LLD), and Behavioral interview topics.
+A comprehensive full-stack application designed to help developers prepare systematically for technical interviews. Track your progress, manage topics, use spaced repetition flashcards, conduct mock interviews, implement Pomodoro study sessions, and analyze your preparation with advanced analytics.
 
-## Features
+## Table of Contents
 
-### 🎯 Core Features (Phase 1)
+- [Features Overview](#features-overview)
+- [Technology Stack](#technology-stack)
+- [Quick Start](#quick-start)
+- [Documentation](#documentation)
+- [Project Structure](#project-structure)
+- [Database Information](#database-information)
+- [Troubleshooting](#troubleshooting)
 
-1. **Topic Management**
-   - Manage topics across 4 categories: DSA, HLD, LLD, Behavioral
-   - Track confidence levels (1-10 scale)
-   - Record time spent, notes, and things to remember
-   - Category-specific fields (difficulty for DSA, pages read for HLD, etc.)
+## Features Overview
 
-2. **Practice Session Logging**
-   - Log practice sessions with duration and performance ratings
-   - Track what went well and mistakes made
-   - Session types: First Learning, Revision, Mock Interview, Quick Review
-   - Automatic confidence updates based on latest performance
+### Phase 1: Core Topic Management & Progress Tracking
+- **Topic Management**: Add, edit, delete, and categorize interview topics (Data Structures, Algorithms, System Design, Behavioral, etc.)
+- **Difficulty Levels**: Classify topics as Easy, Medium, or Hard
+- **Progress Tracking**: Track completion status and confidence levels (1-10 scale)
+- **Practice Sessions**: Log study sessions with duration, notes, performance ratings, and confidence updates
+- **Topic Search & Filter**: Search by name, filter by category, difficulty, status, or confidence
+- **Visual Dashboard**: View progress charts, confidence trends, and category distribution
+- **File Management**: Upload and organize study materials (PDFs, images, notes) by topic
+- **Weekly Goal Tracking**: Set and track weekly study goals per category
+- **Smart Revision Suggestions**: AI-powered priority algorithm for optimal review scheduling
 
-3. **File Upload & Management**
-   - Upload files (PDF, Word, Text, Markdown, HTML, Images)
-   - Organized by topic
-   - Preview images and text files
-   - Download files for offline access
+### Phase 2: Enhanced Productivity & Analytics
+- **Pomodoro Timer**:
+  - Focus sessions (25 min), Short breaks (5 min), Long breaks (15 min)
+  - Track Pomodoro count per topic
+  - Historical Pomodoro statistics and session history
 
-4. **Smart Dashboard**
-   - Intelligent revision suggestions based on weighted priority algorithm
-   - Considers difficulty, confidence, and recency
-   - Weekly progress tracking with color-coded status
-   - Filter suggestions by category
+- **Mock Interview Generator**:
+  - Generate balanced interview question sets
+  - Smart category distribution based on your weak areas
+  - Difficulty-based question selection
+  - Mock interview history tracking with timestamps
 
-5. **Weekly Goal Tracking**
-   - Set weekly goals for each category
-   - Track progress with visual indicators
-   - View historical weekly progress (last 8 weeks)
-   - Configurable week start day
+- **Confidence Decay System**:
+  - Automatic confidence decay for stale topics (prevents overconfidence)
+  - Configurable decay rules (days inactive threshold, decay percentage)
+  - Manual and automatic decay triggers
+  - Confidence history tracking with audit trail
 
-6. **Analytics Dashboard**
-   - Total time studied and session counts
-   - Study streak tracking (current and longest)
-   - Topics breakdown by category and confidence level
-   - Time distribution charts
-   - Recent activity log
+- **Enhanced Analytics**:
+  - Streak tracking (current and longest study streaks)
+  - Time-based metrics (daily, weekly, monthly study time)
+  - Category-wise performance analysis
+  - Confidence distribution heatmaps
+  - Topic aging insights and stale topic detection
 
-7. **Settings & Data Management**
-   - Configure daily study hours and weekly goals
-   - Export/Import all data as JSON
-   - Create backups
-   - Reset all data with confirmation
-   - Storage usage information
+### Phase 3: Advanced Learning Tools
+- **Flashcard System (SM-2 Spaced Repetition)**:
+  - Create flashcards for any topic (front/back cards)
+  - Spaced repetition scheduling using SuperMemo SM-2 algorithm
+  - Quality ratings (0-5) that adjust review intervals dynamically
+  - Ease factor adaptation per card
+  - Due date tracking and review queue management
+  - Success/failure statistics per card
+  - Repetition count tracking
+
+- **Voice Notes**:
+  - Record audio explanations for topics (browser-based recording)
+  - Playback and management interface
+  - Topic-specific voice note library
+  - Timestamp tracking for each recording
+  - No external dependencies required
+
+- **Backup & Restore**:
+  - Export all data (topics, sessions, flashcards, settings, voice notes metadata)
+  - Import from backup files with validation
+  - Automatic file metadata tracking
+  - Storage usage monitoring
+  - Backup history with timestamps
+  - Safe data migration
 
 ## Technology Stack
 
 ### Backend
-- **Java 17** with **Spring Boot 3.2.0**
-- **H2 Database** (embedded, file-based for persistence)
-- **Spring Data JPA** for data persistence
-- **Maven** for dependency management
+- **Framework**: Spring Boot 3.2.0
+- **Language**: Java 17
+- **Database**: H2 (file-based, persistent)
+- **Build Tool**: Maven 3.9+
+- **ORM**: Spring Data JPA / Hibernate
+- **Libraries**:
+  - Lombok 1.18.30 (code generation)
+  - Jackson (JSON processing)
+  - Jakarta Validation
 
 ### Frontend
-- **React 18** with **TypeScript**
-- **Vite** for fast development and building
-- **Tailwind CSS** for styling
-- **Recharts** for analytics visualizations
-- **Axios** for API communication
-- **React Router** for navigation
+- **Framework**: React 18
+- **Language**: TypeScript 5.2+
+- **Build Tool**: Vite 5.0
+- **Routing**: React Router v6
+- **Styling**: Tailwind CSS 3.4
+- **HTTP Client**: Axios
+- **Icons**: Lucide React
+- **Charts**: Recharts 2.10
 
-## Prerequisites
+### Development Tools
+- **Version Control**: Git
+- **Package Manager**: npm
+- **Code Quality**: ESLint, TypeScript strict mode
 
-Before running the application, make sure you have the following installed:
+## Quick Start
 
-- **Java 17 or higher** - [Download](https://adoptium.net/)
-- **Maven 3.6+** - [Download](https://maven.apache.org/download.cgi)
-- **Node.js 18+** and **npm** - [Download](https://nodejs.org/)
+### Prerequisites
+- Java 17 or higher ([Download JDK](https://adoptium.net/))
+- Maven 3.9+ ([Installation Guide](https://maven.apache.org/install.html))
+- Node.js 18+ and npm ([Download Node.js](https://nodejs.org/))
+- Git ([Download Git](https://git-scm.com/))
 
-## Installation & Setup
+### Installation
 
-### Quick Start (Recommended)
-
-1. **Clone or navigate to the project directory:**
+1. **Clone the repository**
    ```bash
+   git clone <repository-url>
    cd interview-tracker
    ```
 
-2. **Start both backend and frontend:**
-   ```bash
-   ./start-all.sh
-   ```
-
-3. **Access the application:**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8080
-   - H2 Console: http://localhost:8080/h2-console
-
-### Manual Setup
-
-#### Backend Setup
-
-1. Navigate to the backend directory:
+2. **Build and start the backend**
    ```bash
    cd backend
-   ```
-
-2. Build and run the Spring Boot application:
-   ```bash
+   mvn clean install -DskipTests
    mvn spring-boot:run
    ```
 
-   Or use the startup script:
-   ```bash
-   cd ..
-   ./start-backend.sh
-   ```
+   Backend will start at `http://localhost:8080`
 
-3. The backend will start on `http://localhost:8080`
-
-#### Frontend Setup
-
-1. Navigate to the frontend directory:
+3. **Install and start the frontend** (in a new terminal)
    ```bash
    cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
    npm install
-   ```
-
-3. Start the development server:
-   ```bash
    npm run dev
    ```
 
-   Or use the startup script:
-   ```bash
-   cd ..
-   ./start-frontend.sh
-   ```
+   Frontend will start at `http://localhost:3000`
 
-4. The frontend will start on `http://localhost:3000`
+4. **Access the application**
+
+   Open your browser and navigate to `http://localhost:3000`
+
+### One-Liner Setup (After Prerequisites)
+```bash
+# Terminal 1 (Backend)
+cd backend && mvn spring-boot:run
+
+# Terminal 2 (Frontend)
+cd frontend && npm install && npm run dev
+```
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- **[SETUP.md](docs/SETUP.md)** - Detailed installation and configuration guide
+- **[USER_GUIDE.md](docs/USER_GUIDE.md)** - Complete feature walkthrough with examples
+- **[DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md)** - Technical implementation details
+- **[API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)** - Complete REST API reference
+- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System architecture and design decisions
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Production deployment instructions
 
 ## Project Structure
 
 ```
 interview-tracker/
-├── backend/                    # Spring Boot backend
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/interviewtracker/
-│   │   │   │   ├── controller/       # REST API controllers
-│   │   │   │   ├── service/          # Business logic services
-│   │   │   │   ├── repository/       # Data access layer
-│   │   │   │   ├── model/            # JPA entities
-│   │   │   │   ├── dto/              # Data Transfer Objects
-│   │   │   │   ├── exception/        # Exception handlers
-│   │   │   │   └── config/           # Configuration classes
-│   │   │   └── resources/
-│   │   │       └── application.properties
-│   │   └── test/
-│   └── pom.xml
+├── backend/                      # Spring Boot backend application
+│   ├── src/main/java/
+│   │   └── com/interviewtracker/
+│   │       ├── config/          # Configuration classes
+│   │       ├── controller/      # REST API controllers (18 controllers)
+│   │       ├── dto/             # Data Transfer Objects
+│   │       ├── exception/       # Custom exceptions
+│   │       ├── model/           # JPA entities (12 entities)
+│   │       ├── repository/      # Spring Data repositories (12 repos)
+│   │       └── service/         # Business logic (18 services)
+│   ├── src/main/resources/
+│   │   └── application.properties
+│   └── pom.xml                 # Maven dependencies
 │
-├── frontend/                   # React frontend
+├── frontend/                    # React TypeScript frontend
 │   ├── src/
-│   │   ├── components/          # Reusable components
-│   │   │   ├── layout/          # Layout components
-│   │   │   ├── common/          # Common UI components
-│   │   │   ├── topics/          # Topic-related components
-│   │   │   ├── sessions/        # Session components
-│   │   │   ├── files/           # File management
-│   │   │   ├── dashboard/       # Dashboard components
-│   │   │   ├── analytics/       # Analytics charts
-│   │   │   └── settings/        # Settings components
-│   │   ├── pages/               # Page components
-│   │   ├── services/            # API services
-│   │   ├── types/               # TypeScript type definitions
-│   │   ├── hooks/               # Custom React hooks
-│   │   ├── context/             # React contexts
-│   │   ├── utils/               # Utility functions
-│   │   ├── App.tsx              # Main App component
-│   │   ├── main.tsx             # Entry point
-│   │   └── index.css            # Global styles
-│   ├── package.json
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   └── tsconfig.json
+│   │   ├── components/         # React components
+│   │   │   ├── analytics/      # Analytics visualizations
+│   │   │   ├── flashcards/     # Flashcard system UI
+│   │   │   ├── topics/         # Topic management UI
+│   │   │   ├── pomodoro/       # Pomodoro timer UI
+│   │   │   ├── voicenotes/     # Voice recording UI
+│   │   │   └── dashboard/      # Dashboard components
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── services/           # API service layer
+│   │   ├── types/              # TypeScript type definitions
+│   │   ├── utils/              # Utility functions
+│   │   ├── App.tsx             # Root component
+│   │   └── main.tsx            # Application entry point
+│   ├── package.json            # npm dependencies
+│   ├── tsconfig.json           # TypeScript configuration
+│   ├── vite.config.ts          # Vite configuration
+│   └── tailwind.config.js      # Tailwind CSS configuration
 │
-├── start-backend.sh            # Backend startup script
-├── start-frontend.sh           # Frontend startup script
-├── start-all.sh                # Combined startup script
-└── README.md                   # This file
+├── uploads/                     # File storage (created at runtime)
+│   ├── audio/                  # Voice note recordings
+│   └── backups/                # Data backups
+│
+├── database/                    # H2 database files (created at runtime)
+│
+└── docs/                        # Comprehensive documentation
+    ├── SETUP.md
+    ├── USER_GUIDE.md
+    ├── DEVELOPER_GUIDE.md
+    ├── API_DOCUMENTATION.md
+    ├── ARCHITECTURE.md
+    └── DEPLOYMENT.md
 ```
 
-## API Endpoints
-
-### Topics
-- `GET /api/topics/{category}` - Get all topics by category
-- `GET /api/topics/{category}/{id}` - Get topic by ID
-- `POST /api/topics/{category}` - Create new topic
-- `PUT /api/topics/{category}/{id}` - Update topic
-- `DELETE /api/topics/{category}/{id}` - Delete topic
-
-### Practice Sessions
-- `GET /api/sessions/topic/{topicId}` - Get sessions for a topic
-- `POST /api/sessions/topic/{topicId}` - Create new session
-- `PUT /api/sessions/{id}` - Update session
-- `DELETE /api/sessions/{id}` - Delete session
-- `GET /api/sessions/recent?limit=10` - Get recent sessions
-
-### Files
-- `POST /api/files/upload/{topicId}` - Upload file
-- `GET /api/files/topic/{topicId}` - Get files for topic
-- `GET /api/files/{id}` - Download file
-- `GET /api/files/{id}/preview` - Preview file (images/text)
-- `DELETE /api/files/{id}` - Delete file
-
-### Dashboard
-- `GET /api/dashboard/suggestions` - Get revision suggestions
-- `GET /api/dashboard/weekly/progress` - Get current week progress
-- `GET /api/dashboard/weekly/history?weeks=8` - Get weekly history
-
-### Analytics
-- `GET /api/analytics/summary` - Get analytics summary
-- `GET /api/analytics/recent-activity?limit=10` - Get recent activity
-
-### Settings
-- `GET /api/settings` - Get settings
-- `PUT /api/settings` - Update settings
-
-### Data Management
-- `GET /api/data/export` - Export all data
-- `POST /api/data/import` - Import data
-- `DELETE /api/data/reset` - Reset all data
-- `POST /api/data/backup` - Create backup
-- `GET /api/data/storage-info` - Get storage information
-
-## Database
+## Database Information
 
 The application uses H2 database with file-based persistence:
 
-- **Location:** `~/interview-tracker/data/tracker.mv.db`
-- **Console:** http://localhost:8080/h2-console
-  - JDBC URL: `jdbc:h2:file:~/interview-tracker/data/tracker`
-  - Username: `sa`
-  - Password: (leave empty)
+- **Database Location**: `./database/interviewtracker.mv.db`
+- **Console Access**: `http://localhost:8080/h2-console`
+- **JDBC URL**: `jdbc:h2:file:./database/interviewtracker`
+- **Username**: `sa`
+- **Password**: (leave blank)
 
-## File Storage
+The database persists data between restarts. To reset the database, stop the backend and delete the `database/` directory.
 
-Uploaded files are stored at:
-- **Upload Directory:** `~/interview-tracker/uploads/`
-- **Backup Directory:** `~/interview-tracker/backups/`
+## Default Configuration
 
-## Usage Guide
+### Backend (application.properties)
+- **Server Port**: 8080
+- **Upload Directory**: `./uploads`
+- **Backup Directory**: `./uploads/backups`
+- **Max File Size**: 10MB
+- **Allowed Origins**: `http://localhost:3000`, `http://localhost:5173`
 
-### Adding a Topic
+### Frontend (vite.config.ts)
+- **Dev Server Port**: 3000
+- **API Proxy**: `/api` → `http://localhost:8080`
 
-1. Navigate to the appropriate category page (DSA, HLD, LLD, or Behavioral)
-2. Click "Add New Topic"
-3. Fill in the required fields:
-   - Topic name (or Question for Behavioral)
-   - Confidence level (1-10)
-   - Category-specific fields (difficulty for DSA, etc.)
-   - Optional: notes, source URL, things to remember
-4. Click "Save"
+## Daily Workflow
 
-### Logging a Practice Session
+1. **Start your day**: Open the app and check the dashboard for topics due for review
+2. **Select a topic**: Choose from topics with low confidence or approaching reminders
+3. **Start Pomodoro**: Begin a focused 25-minute study session
+4. **Review flashcards**: Go through due flashcards for the topic using spaced repetition
+5. **Add notes**: Record voice notes for complex explanations
+6. **Log session**: Record your practice session with updated confidence
+7. **Mock interview**: Test yourself with a generated mock interview set
+8. **Review analytics**: Check your streaks, study time, and progress metrics
+9. **Backup data**: Periodically export your data for safekeeping
 
-1. Find your topic in the list
-2. Click "Practice" button
-3. Fill in the session details:
-   - Duration (minutes)
-   - Performance rating (1-10)
-   - Session type
-   - Optional: what went well, mistakes made, notes
-4. Click "Save Session"
+## Key Features in Detail
 
-### Using the Dashboard
+### Spaced Repetition (SM-2 Algorithm)
+The flashcard system implements the SuperMemo SM-2 algorithm:
+- Initial interval: 1 day
+- Second interval: 6 days
+- Subsequent intervals: previous interval × ease factor
+- Ease factor adjusts based on your quality ratings (0-5)
+- Minimum ease factor: 1.3 (prevents too-frequent reviews)
+- Formula: `new_ease = old_ease + (280 - (5 - quality) * 280)`
 
-The dashboard provides:
-- **Weekly Progress Cards:** Visual progress for each category
-- **Revision Suggestions:** Prioritized list of topics to review
-  - Higher priority = needs more attention
-  - Filter by category
-  - Shows confidence, last studied date, and estimated time
+### Confidence Decay
+Topics automatically decay in confidence if not reviewed:
+- Default: 5% decay every 7 days of inactivity
+- Configurable decay amount (1-20%) and interval (1-90 days)
+- Helps you identify topics that need refreshing
+- View decay history for audit trail
+- Prevents overconfidence on stale topics
 
-### Viewing Analytics
-
-The Analytics page shows:
-- Total topics, sessions, and time spent
-- Study streak information
-- Distribution charts by category
-- Topics grouped by confidence level
-- Recent practice activity
-
-### Managing Settings
-
-In Settings, you can:
-- Set daily study hours limit
-- Configure weekly goals per category
-- Choose week start day (Monday or Sunday)
-- Export/Import data
-- Create backups
-- Reset all data (with confirmation)
-
-## Revision Suggestion Algorithm
-
-Topics are prioritized using a weighted scoring system:
-
-```
-Priority Score = (Difficulty Weight) × (Confidence Weight) × (Recency Weight)
-```
-
-Where:
-- **Difficulty Weight:** Easy = 1.0, Medium = 1.5, Hard = 2.0
-- **Confidence Weight:** (11 - confidence) / 10
-- **Recency Weight:**
-  - 0-1 days: 0.3
-  - 2-3 days: 0.6
-  - 4-7 days: 1.0
-  - 8-14 days: 1.5
-  - 15-30 days: 2.0
-  - 31+ days: 2.5
-
-Higher scores indicate topics that need more attention.
+### Smart Mock Interviews
+The generator creates balanced question sets:
+- Distributes questions across categories
+- Weighs selection by difficulty and confidence (prioritizes weak areas)
+- Limits questions per category for variety
+- Saves mock interview history for tracking
+- Configurable set size
 
 ## Troubleshooting
 
 ### Backend won't start
 - Ensure Java 17+ is installed: `java -version`
-- Check if port 8080 is available
-- Verify Maven is installed: `mvn -version`
-- Check backend.log for errors
+- Check port 8080 is not in use: `lsof -i :8080` (Mac/Linux) or `netstat -ano | findstr :8080` (Windows)
+- Verify Maven build succeeded: `mvn clean install`
+- Check `backend.log` for errors
 
 ### Frontend won't start
-- Ensure Node.js is installed: `node -version`
-- Delete node_modules and reinstall: `rm -rf node_modules && npm install`
-- Check if port 3000 is available
-- Check frontend.log for errors
+- Ensure Node.js 18+ is installed: `node -v`
+- Check port 3000 is not in use
+- Clear npm cache: `npm cache clean --force`
+- Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
 
-### Database issues
-- Check if ~/interview-tracker/data directory exists
-- Verify H2 database file permissions
-- Access H2 console to inspect database
+### "Cannot connect to backend" error
+- Verify backend is running on port 8080
+- Check browser console for CORS errors
+- Ensure API proxy is configured in `vite.config.ts`
+- Verify `http://localhost:8080/api/topics` returns data
 
-### File upload issues
-- Check ~/interview-tracker/uploads directory permissions
-- Verify file size is under 50MB
-- Ensure file type is allowed
+### Database errors
+- Delete the `database/` directory to reset
+- Check file permissions on the database directory
+- Ensure no other instance is accessing the database
 
-## Development
+### Lombok compilation errors
+If you see "cannot find symbol" errors for getters/setters:
+- Verify `maven-compiler-plugin` is configured in `pom.xml`
+- Run `mvn clean install` to trigger annotation processing
+- Check that Lombok version 1.18.30 is in dependencies
 
-### Building for Production
+## API Overview
 
-#### Backend
-```bash
-cd backend
-mvn clean package
-java -jar target/interview-tracker-backend-1.0.0.jar
-```
+The application exposes **130+ REST endpoints** organized into:
 
-#### Frontend
-```bash
-cd frontend
-npm run build
-npm run preview
-```
+- **Topics** (9 endpoints) - CRUD operations for topics
+- **Practice Sessions** (7 endpoints) - Session logging and retrieval
+- **Files** (8 endpoints) - File upload/download/preview
+- **Dashboard** (5 endpoints) - Revision suggestions and progress
+- **Analytics** (12 endpoints) - Comprehensive metrics and insights
+- **Settings** (4 endpoints) - Configuration management
+- **Pomodoro** (11 endpoints) - Timer and session management
+- **Mock Interviews** (9 endpoints) - Generate and track mock interviews
+- **Confidence Decay** (7 endpoints) - Decay rules and history
+- **Flashcards** (18 endpoints) - Spaced repetition flashcard system
+- **Voice Notes** (9 endpoints) - Audio recording management
+- **Backup & Restore** (6 endpoints) - Data export/import
 
-### Running Tests
-
-#### Backend
-```bash
-cd backend
-mvn test
-```
-
-#### Frontend
-```bash
-cd frontend
-npm run test
-```
-
-## Future Enhancements (Phase 2 & 3)
-
-- Spaced repetition algorithm integration
-- Company-specific interview tracking
-- Collaborative features (share topics with peers)
-- Mobile responsive design improvements
-- Export analytics as PDF
-- Custom tags and filters
-- Search functionality
-- Interview scheduling and reminders
+See [API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) for complete details.
 
 ## Contributing
 
-This is a personal project, but suggestions and feedback are welcome!
+Contributions are welcome! Please follow these guidelines:
 
-## License
-
-This project is for personal use.
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## Support
 
-For issues or questions:
-1. Check the troubleshooting section
-2. Review application logs (backend.log, frontend.log)
-3. Check H2 console for database issues
-4. Verify all prerequisites are correctly installed
+For issues, questions, or suggestions:
+- Check the documentation in the `docs/` folder
+- Review the troubleshooting section above
+- Open an issue on GitHub
+
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- SuperMemo SM-2 Algorithm for spaced repetition
+- Spring Boot framework and community
+- React and TypeScript communities
+- Tailwind CSS for styling utilities
+- All open-source contributors
 
 ---
 
-**Built with ❤️ for interview preparation success!**
+**Built with ❤️ for interview preparation success**

@@ -2,7 +2,7 @@ package com.interviewtracker.controller;
 
 import com.interviewtracker.dto.EnhancedAnalyticsDTO;
 import com.interviewtracker.service.EnhancedAnalyticsService;
-import org.springframework.beans.factory.autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

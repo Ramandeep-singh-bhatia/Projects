@@ -109,7 +109,7 @@ public class ConfidenceDecayService {
     @Transactional
     public int applyDecayManually() {
         applyConfidenceDecay();
-        return (int) confidenceHistoryRepository.countByTopicIdAndChangeReason(null, ChangeReason.DECAY);
+        return Math.toIntExact(confidenceHistoryRepository.countByTopicIdAndChangeReason(null, ChangeReason.DECAY));
     }
 
     /**

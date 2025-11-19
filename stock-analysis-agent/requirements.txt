@@ -11,14 +11,14 @@ yfinance==0.2.33
 alpha-vantage==2.3.1
 newsapi-python==0.2.7
 feedparser==6.0.11
-requests==2.31.0
+requests==2.32.4
 beautifulsoup4==4.12.2
 lxml==4.9.4
 
 # NLP & Sentiment Analysis
-transformers==4.36.2
-torch==2.1.2
-nltk==3.8.1
+transformers==4.53.0
+torch==2.8.0
+nltk==3.9
 spacy==3.7.2
 textblob==0.17.1
 vaderSentiment==3.3.2
@@ -66,14 +66,14 @@ python-json-logger==2.0.7
 # Utilities
 python-dateutil==2.8.2
 pytz==2023.3.post1
-tqdm==4.66.1
+tqdm==4.66.3
 tenacity==8.2.3
 
 # Email & Notifications (Local/Free)
 # Using local SMTP or file-based notifications instead
 
 # Security
-cryptography==41.0.7
+cryptography==44.0.1
 
 # Development Tools
 black==23.12.1
