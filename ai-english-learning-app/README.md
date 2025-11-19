@@ -5,9 +5,11 @@ A comprehensive, intelligent AI-powered English learning system that adapts to Y
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React](https://img.shields.io/badge/React-18.2.0-61dafb.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D16.0.0-green.svg)
-![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-green.svg)
 
-> **NEW!** 🎉 **Phase 1 Advanced Features** now available! See [ADVANCED_FEATURES.md](./ADVANCED_FEATURES.md) for comprehensive documentation on contextual memory, pattern recognition, AI recommendations, flexible streaks, and micro-learning.
+> **NEW!** 🎉 **Phase 2 & 3 Advanced Features** now complete! See [PHASE2-3-FEATURES.md](./PHASE2-3-FEATURES.md) for comprehensive documentation on active listening, enhanced vocabulary, speaking confidence, advanced analytics, practical tools, social learning, immersion simulation, advanced conversation, personalized paths, and meta-learning skills.
+>
+> **Phase 1 Features** also available! See [ADVANCED_FEATURES.md](./ADVANCED_FEATURES.md) for contextual memory, pattern recognition, AI recommendations, flexible streaks, and micro-learning.
 
 ## Table of Contents
 
@@ -172,6 +174,85 @@ This application addresses the common challenges faced by non-native English spe
 - **Skill Radar Chart**: Visual skill balance at a glance
 
 **📖 Comprehensive Documentation**: See [ADVANCED_FEATURES.md](./ADVANCED_FEATURES.md) for detailed technical documentation, usage examples, and integration guides.
+
+---
+
+### 🚀 Phase 2 & 3: Professional-Grade Features
+
+**The app now includes 10 advanced services that bring professional-level language learning capabilities:**
+
+#### 🎧 Active Listening & Shadowing
+- **Shadowing Exercises**: Listen, pause, and repeat with native speakers
+- **Speech Analysis**: Pace, clarity, rhythm, and pronunciation scoring
+- **Pronunciation Drills**: Difficult sounds by language background (Spanish, Chinese, Japanese, general)
+- **Accent Reduction**: Language-specific exercises targeting common transfer errors
+- **Pacing & Rhythm**: Thought groups, stress patterns, and linking practice
+
+#### 📚 Enhanced Vocabulary Building
+- **Word Relationship Maps**: Visualize synonyms, antonyms, word families, collocations
+- **Frequency-Based Learning**: 5-tier system (essential → rare) for strategic vocabulary building
+- **Collocations Trainer**: Master natural word combinations (make a decision, take a break)
+- **Register Awareness**: Learn formal/informal variants for appropriate usage
+- **AI-Enhanced Maps**: Optional AI integration for deeper word connections
+
+#### 💪 Speaking Confidence Builders
+- **Filler Word Reduction**: Track and reduce um, uh, like, you know
+- **Conversation Starters**: Context-specific openers (networking, social, professional, casual)
+- **Question Formation**: Practice creating yes/no, open-ended, clarifying, follow-up questions
+- **Thinking Time Phrases**: Professional ways to buy time ("Let me consider that...")
+- **Progress Tracking**: Monitor filler usage reduction over time
+
+#### 📊 Advanced Analytics & Insights
+- **Learning Velocity**: Points/week improvement rate with acceleration tracking
+- **Retention Heatmap**: 90-day visual calendar of practice intensity
+- **Optimal Time Analysis**: Identify your peak performance windows
+- **Skill Radar Charts**: Multi-dimensional skill visualization with balance scoring
+- **CEFR Level Comparison**: Map progress to international standards (A1-C2)
+- **Timeline Projections**: Predict goal achievement dates with confidence levels
+
+#### 🛠️ Practical Application Tools
+- **Quick Phrase Lookup**: Instant access to situation-specific language
+- **Phrase Builder**: Express same idea 5 ways (very informal → very formal)
+- **Anti-Translation Trainer**: Think in English, not translate from native language
+- **Context-Appropriate Suggestions**: Situation-specific do's and don'ts
+- **Real-World Scenarios**: Guided practice for common situations (restaurants, workplace, shopping)
+
+#### 🎭 Social Learning & Simulation
+- **Debate Mode**: Structured arguments on technology, education, environment topics
+- **Interview Simulator**: Job, university, and media interview preparation
+- **Emotion Training**: Express empathy, enthusiasm, disagreement, handle bad news
+- **Cultural Context Lessons**: Navigate American, British, Australian differences
+- **Role-Playing**: Professional, social, and service scenarios
+
+#### 🌍 Immersion Simulation
+- **Daily Life Scenarios**: Morning routine, grocery shopping, doctor visits, moving, emergencies
+- **Multi-Turn Conversations**: 3-8 turn dialogues in airports, hotels, offices, restaurants
+- **Stress Testing**: Rapid-fire questions, unexpected problems, multi-tasking, accent challenges
+- **Think-in-English**: Describe surroundings, plan your day, mental narration exercises
+- **Environment Vocabulary**: Complete word lists for each scenario type
+
+#### 🗣️ Advanced Conversation Skills
+- **Interruption Recovery**: Handle being interrupted or interrupting others
+- **Storytelling Frameworks**: SCR, STAR, Hero's Journey, Punchline First structures
+- **Active Listening**: Verbal and non-verbal listening techniques
+- **Negotiation & Persuasion**: Salary negotiation, conflict resolution, persuasion techniques
+- **Conversation Repair**: Clarification, topic transitions, handling misunderstandings
+- **Turn-Taking**: Yielding, taking, holding, and back-channeling skills
+
+#### 🎯 Personalized Learning Paths
+- **6 Goal-Based Tracks**: Job interview prep, IELTS/TOEFL, business English, travel, academic, casual conversation
+- **Industry Modules**: Technology, healthcare, finance, marketing, education vocabulary and scenarios
+- **Custom Roadmaps**: Personalized weekly plans adjusted for your level and time commitment
+- **Progress Tracking**: Week-by-week completion, milestone tracking, estimated completion dates
+
+#### 🧠 Meta-Learning Skills
+- **Learning Strategies**: Spaced repetition, active recall, interleaving, elaboration, dual coding, Pomodoro
+- **Memory Techniques**: Mnemonics, memory palace, chunking, association, storytelling
+- **Reflection Prompts**: Daily, weekly, and monthly structured self-reflection
+- **Study Habits**: Optimal habits to adopt and habits to avoid
+- **Self-Assessment**: Overall proficiency, learning habits, confidence in real-world situations
+
+**📖 Full Documentation**: See [PHASE2-3-FEATURES.md](./PHASE2-3-FEATURES.md) for complete API reference, integration examples, and usage workflows for all 10 advanced services.
 
 ---
 
