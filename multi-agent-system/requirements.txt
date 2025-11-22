@@ -63,7 +63,7 @@ loguru==0.7.2
 prometheus-client==0.20.0
 
 # Security
-cryptography==42.0.7
+cryptography==44.0.1
 python-jose[cryptography]==3.3.0
 
 # Rate Limiting
