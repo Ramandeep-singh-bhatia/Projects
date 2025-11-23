@@ -1,8 +1,8 @@
 # LangChain and LLM Dependencies
-langchain==0.1.0
+langchain==0.2.5
 langchain-anthropic==0.1.0
 langchain-openai==0.0.5
-langchain-community==0.0.10
+langchain-community==0.3.27
 
 # Vector Database
 faiss-cpu==1.7.4
@@ -10,7 +10,7 @@ faiss-cpu==1.7.4
 # Web Frameworks
 fastapi==0.109.0
 uvicorn==0.27.0
-streamlit==1.30.0
+streamlit==1.37.0
 
 # Data Validation and Models
 pydantic==2.5.0
@@ -36,8 +36,8 @@ openai==1.10.0
 tiktoken==0.5.2
 
 # Utilities
-requests==2.31.0
-aiohttp==3.9.1
+requests==2.32.4
+aiohttp==3.12.14
 
 # Language Detection and Processing
 langdetect==1.0.9

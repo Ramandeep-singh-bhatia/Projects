@@ -1,0 +1,36 @@
+{
+  "name": "fittracker-pro-fullstack",
+  "version": "1.0.0",
+  "description": "FitTracker Pro - Full Stack Fitness Tracking Application",
+  "private": true,
+  "scripts": {
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:frontend",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && mvn spring-boot:run",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && mvn clean package -DskipTests",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && mvn test",
+    "test:all": "npm run test:backend && npm run test:frontend",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v",
+    "start": "docker-compose up -d"
+  },
+  "keywords": [
+    "fitness",
+    "tracking",
+    "nutrition",
+    "workout",
+    "spring-boot",
+    "react",
+    "typescript",
+    "full-stack"
+  ],
+  "author": "Ramandeep Singh Bhatia",
+  "license": "MIT"
+}

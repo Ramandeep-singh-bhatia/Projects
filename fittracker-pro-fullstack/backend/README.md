@@ -4,6 +4,131 @@
 
 FitTracker Pro is a production-ready microservices-based health and fitness tracking platform built with Spring Boot 3.x and Spring Cloud. The platform provides comprehensive features for user management, nutrition tracking, workout planning, and analytics.
 
+## 📚 Documentation
+
+**→ [Start Here: DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Complete documentation navigation guide
+
+### Complete Documentation Suite (90,000+ words)
+
+| Guide | Description | Best For |
+|-------|-------------|----------|
+| **[📖 DOCUMENTATION_INDEX](DOCUMENTATION_INDEX.md)** | Navigation hub for all documentation | Finding the right guide |
+| **[🚀 GETTING_STARTED](GETTING_STARTED.md)** | Complete setup and installation guide (15,000+ words) | New users, first-time setup |
+| **[🏗️ ARCHITECTURE](ARCHITECTURE.md)** | Deep dive into system design (20,000+ words) | Architects, technical leads |
+| **[📋 API_REFERENCE](API_REFERENCE.md)** | Complete REST API documentation (18,000+ words) | Frontend/mobile developers |
+| **[👨‍💻 DEVELOPER_GUIDE](DEVELOPER_GUIDE.md)** | Contributing and development guide (15,000+ words) | Code contributors |
+| **[⚙️ OPERATIONS_GUIDE](OPERATIONS_GUIDE.md)** | Production deployment & ops (12,000+ words) | DevOps, sysadmins |
+| **[🔧 TROUBLESHOOTING](TROUBLESHOOTING.md)** | Common issues and solutions (10,000+ words) | Debugging, support |
+| **[🚢 DEPLOYMENT](DEPLOYMENT.md)** | Deployment procedures | Production deployment |
+| **[🎯 DEMO_SCENARIOS](DEMO_SCENARIOS.md)** | 9 testing scenarios | QA, testing, demos |
+
+### Quick Links by Role
+
+- **New User?** → Start with [GETTING_STARTED.md](GETTING_STARTED.md)
+- **Developer?** → Read [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) + [ARCHITECTURE.md](ARCHITECTURE.md)
+- **DevOps?** → Follow [OPERATIONS_GUIDE.md](OPERATIONS_GUIDE.md) + [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Frontend/Mobile Dev?** → Reference [API_REFERENCE.md](API_REFERENCE.md)
+- **Having Issues?** → Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
+
+## ✨ Features
+
+### User Management
+- ✅ User registration with email validation
+- ✅ JWT-based authentication and authorization
+- ✅ User profile management (height, weight, goals)
+- ✅ Fitness goal tracking (weight loss, muscle gain, maintenance)
+- ✅ Activity level customization (sedentary to extra active)
+- ✅ Password security with BCrypt hashing
+
+### Nutrition Tracking
+- ✅ Comprehensive food database with 17+ verified items
+- ✅ Barcode scanning support (infrastructure ready)
+- ✅ Meal logging with automatic nutrition calculation
+- ✅ Calorie and macronutrient tracking (protein, carbs, fat, fiber, sugar)
+- ✅ Daily/weekly/monthly nutrition summaries
+- ✅ Meal history and search
+- ✅ Custom serving sizes
+
+### Workout Tracking
+- ✅ Exercise library with 15+ verified exercises
+- ✅ Exercise categorization by muscle group (chest, back, legs, arms, shoulders, core)
+- ✅ Difficulty levels (beginner, intermediate, advanced)
+- ✅ Workout session management (create, track, complete)
+- ✅ Calorie burn estimation
+- ✅ Sets, reps, and weight tracking
+- ✅ Workout history and progress tracking
+
+### Analytics & Insights
+- ✅ Real-time daily summaries (calories consumed/burned, net calories)
+- ✅ Weekly and monthly trend analysis
+- ✅ Goal progress tracking
+- ✅ Macronutrient breakdown
+- ✅ Workout frequency analysis
+- ✅ Event-driven analytics updates via Kafka
+
+### Technical Features
+- ✅ Microservices architecture (8 services)
+- ✅ Event-driven design with Apache Kafka
+- ✅ Distributed caching with Redis
+- ✅ Service discovery with Eureka
+- ✅ API Gateway for routing and load balancing
+- ✅ Database migrations with Flyway
+- ✅ Comprehensive monitoring (Prometheus + Grafana)
+- ✅ Distributed tracing with Jaeger
+- ✅ Swagger/OpenAPI documentation
+- ✅ Docker containerization
+- ✅ Production-ready deployment configuration
+
+## 🛠️ Technology Stack
+
+### Backend Framework
+- **Java 17** - Programming language
+- **Spring Boot 3.2.0** - Application framework
+- **Spring Cloud 2023.0.0** - Microservices infrastructure
+- **Spring Data JPA** - Database access
+- **Spring Security** - Authentication and authorization
+- **Spring Kafka** - Event streaming
+
+### Databases & Storage
+- **PostgreSQL 14** - Primary database (4 databases: users, nutrition, workouts, analytics)
+- **Redis 7** - Distributed caching and session management
+- **Flyway** - Database version control and migrations
+
+### Messaging & Events
+- **Apache Kafka 7.5.0** - Event streaming platform
+- **Zookeeper 7.5.0** - Kafka coordination
+
+### Service Infrastructure
+- **Eureka Server** - Service discovery and registration
+- **Spring Cloud Gateway** - API Gateway and routing
+- **Spring Cloud Config** - Centralized configuration management
+
+### Monitoring & Observability
+- **Prometheus** - Metrics collection
+- **Grafana** - Metrics visualization and dashboards
+- **Jaeger** - Distributed tracing
+- **Spring Boot Actuator** - Health checks and metrics endpoints
+
+### Documentation
+- **Swagger/OpenAPI 3.0** - Interactive API documentation
+- **SpringDoc** - OpenAPI integration
+
+### Build & Deployment
+- **Maven 3.9** - Build automation
+- **Docker** - Containerization
+- **Docker Compose** - Multi-container orchestration
+
+### Testing
+- **JUnit 5** - Unit testing framework
+- **Mockito** - Mocking framework
+- **TestContainers** - Integration testing with containers
+- **Spring Boot Test** - Integration testing support
+
+### Code Quality
+- **Lombok** - Reduce boilerplate code
+- **Jakarta Validation** - Input validation
+- **SLF4J + Logback** - Logging
+
 ## 🏗️ Architecture
 
 ### Microservices
