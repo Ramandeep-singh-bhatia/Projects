@@ -4,7 +4,7 @@ crewai-tools==0.2.6
 langgraph==0.0.55
 langchain==0.1.20
 langchain-openai==0.1.7
-langchain-community==0.0.38
+langchain-community==0.3.27
 
 # LLM and AI
 openai==1.30.1
