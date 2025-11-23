@@ -24,7 +24,7 @@ python-Levenshtein==0.23.0
 
 # HTTP requests
 httpx==0.25.2
-aiohttp==3.9.1
+aiohttp==3.12.14
 
 # PDF/Document processing
 pypdf2==3.0.1
