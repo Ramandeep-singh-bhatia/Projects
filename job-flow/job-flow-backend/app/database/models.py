@@ -2,7 +2,7 @@
 SQLAlchemy database models
 """
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, JSON, Text, ForeignKey, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, synonym
 from datetime import datetime
 from .database import Base
 
@@ -33,18 +33,24 @@ class UserProfile(Base):
 
     # Work Authorization
     work_authorized = Column(Boolean, default=True)
+    work_authorization = synonym('work_authorized')  # Alias for scanner compatibility
     requires_sponsorship = Column(Boolean, default=False)
     security_clearance = Column(Boolean, default=False)
+    willing_to_relocate = Column(Boolean, default=False)
 
     # Job Preferences
     preferred_roles = Column(JSON)  # ["Senior Software Engineer", "Backend Engineer"]
     preferred_locations = Column(JSON)  # ["Seattle", "Remote", "Bellevue"]
-    remote_preference = Column(String(50))  # "remote", "hybrid", "onsite", "any"
+    remote_preference = Column(String(50))  # "remote", "hybrid", "onsite", "any", "remote_only"
     min_salary = Column(Integer)
+    salary_expectation_min = synonym('min_salary')  # Alias
     max_salary = Column(Integer)
+    salary_expectation_max = synonym('max_salary')  # Alias
 
     # Experience
     total_years_experience = Column(Integer)
+    years_of_experience = synonym('total_years_experience')  # Alias for scanner
+    years_experience = synonym('total_years_experience')  # Another alias
     current_title = Column(String(255))
     tech_skills = Column(JSON)  # {"Python": 6, "Java": 4, "AWS": 4, ...}
 
@@ -67,6 +73,7 @@ class UserProfile(Base):
     resumes = relationship("Resume", back_populates="user", cascade="all, delete-orphan")
     applications = relationship("Application", back_populates="user", cascade="all, delete-orphan")
     questions = relationship("Question", back_populates="user", cascade="all, delete-orphan")
+    job_listings = relationship("JobListing", back_populates="user", cascade="all, delete-orphan")
 
 
 class Resume(Base):
@@ -209,41 +216,55 @@ class JobListing(Base):
     __tablename__ = "job_listings"
 
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("user_profiles.id"), nullable=False)
 
     # Job details
     company = Column(String(255), nullable=False)
-    job_title = Column(String(255), nullable=False)
+    job_title = Column(String(255), nullable=False, name='title')  # Alias for compatibility
+    title = synonym('job_title')  # Allow both job_title and title
     job_url = Column(String(500), nullable=False, unique=True)
     description = Column(Text)
     requirements = Column(Text)
     location = Column(String(255))
-    job_type = Column(String(50))
+    job_type = Column(String(50), name='employment_type')  # Alias for compatibility
+    employment_type = synonym('job_type')
     salary_range = Column(String(100))
+    salary_min = Column(Integer)  # Salary range as min/max integers
+    salary_max = Column(Integer)
+    experience_level = Column(String(100))  # Entry, Mid, Senior, etc.
 
     # Platform info
     platform = Column(String(50))  # "linkedin", "indeed", etc.
-    platform_job_id = Column(String(100))
+    platform_job_id = Column(String(100), name='external_job_id')  # Alias
+    external_job_id = synonym('platform_job_id')
     easy_apply = Column(Boolean, default=False)
 
     # Dates
     posted_date = Column(DateTime)
     expires_date = Column(DateTime)
+    applied_at = Column(DateTime)  # When user actually applied
 
     # Matching
-    match_score = Column(Integer)  # 0-100
+    match_score = Column(Float, default=0.0)  # 0-100
     match_details = Column(JSON)  # Detailed matching breakdown
 
-    # Status
+    # Status and review
+    status = Column(String(50), default='discovered')  # discovered, saved, queued, applied, rejected, maybe, interview, offer, archived
     reviewed = Column(Boolean, default=False)
     applied = Column(Boolean, default=False)
     skipped = Column(Boolean, default=False)
     skip_reason = Column(String(255))
+
+    # Review metadata
+    priority = Column(Integer)  # 1-5, for queued jobs
+    notes = Column(Text)  # User notes about this job
 
     # Tracking
     discovered_at = Column(DateTime, default=datetime.utcnow)
     last_checked = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
+    user = relationship("UserProfile", back_populates="job_listings")
     application_id = Column(Integer, ForeignKey("applications.id"))
 
 

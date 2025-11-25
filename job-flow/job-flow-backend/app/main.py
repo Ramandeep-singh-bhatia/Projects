@@ -92,7 +92,7 @@ async def health_check():
 
 
 # Import and include routers
-from .api.routes import profile, questions, resumes, applications, jobs, analytics, scanner
+from .api.routes import profile, questions, resumes, applications, jobs, analytics, scanner, review
 
 app.include_router(profile.router)
 app.include_router(questions.router)
@@ -101,6 +101,7 @@ app.include_router(applications.router)
 app.include_router(jobs.router)
 app.include_router(analytics.router)
 app.include_router(scanner.router)
+app.include_router(review.router)
 # TODO: Add claude router when implemented
 # app.include_router(claude.router)
 
