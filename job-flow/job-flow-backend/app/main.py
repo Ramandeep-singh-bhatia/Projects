@@ -34,8 +34,12 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing database...")
     init_db()
 
+    # Start job scanner scheduler
+    logger.info("Starting job scanner scheduler...")
+    from .services.scheduler import start_scheduler
+    start_scheduler()
+
     # TODO: Initialize Claude web client if configured
-    # TODO: Start job scanner scheduler if enabled
 
     logger.info("JobFlow Backend started successfully")
 
@@ -43,8 +47,13 @@ async def lifespan(app: FastAPI):
 
     # Shutdown
     logger.info("Shutting down JobFlow Backend...")
+
+    # Stop scheduler
+    logger.info("Stopping job scanner scheduler...")
+    from .services.scheduler import stop_scheduler
+    stop_scheduler()
+
     # TODO: Close Claude web client
-    # TODO: Stop scheduler
 
 
 # Create FastAPI application
@@ -83,7 +92,7 @@ async def health_check():
 
 
 # Import and include routers
-from .api.routes import profile, questions, resumes, applications, jobs, analytics
+from .api.routes import profile, questions, resumes, applications, jobs, analytics, scanner
 
 app.include_router(profile.router)
 app.include_router(questions.router)
@@ -91,6 +100,7 @@ app.include_router(resumes.router)
 app.include_router(applications.router)
 app.include_router(jobs.router)
 app.include_router(analytics.router)
+app.include_router(scanner.router)
 # TODO: Add claude router when implemented
 # app.include_router(claude.router)
 
