@@ -5,19 +5,26 @@
 
 import { contentLogger as logger } from '../shared/utils/logger';
 import { PlatformType, MessageType } from '../shared/types';
-import type { FormField, Message } from '../shared/types';
+import type { FormField, Message, UserProfile } from '../shared/types';
 import { FormDetector } from './form-detector';
 import { FieldMapper } from './field-mapper';
+import { getPlatformHandler, getCurrentPlatformName, hasKnownPlatform } from './platform-handlers';
+import type { BasePlatformHandler } from './platform-handlers';
 
 class ContentScript {
   private formDetector: FormDetector;
   private fieldMapper: FieldMapper;
+  private platformHandler: BasePlatformHandler | null = null;
   private currentPlatform: PlatformType = PlatformType.UNKNOWN;
   private isActive: boolean = false;
+  private userProfile: UserProfile | null = null;
 
   constructor() {
     this.formDetector = new FormDetector();
     this.fieldMapper = new FieldMapper();
+
+    // Try to get platform-specific handler
+    this.platformHandler = getPlatformHandler();
 
     logger.info('Content script initialized');
   }
@@ -28,7 +35,8 @@ class ContentScript {
   async init(): Promise<void> {
     // Detect platform
     this.currentPlatform = this.detectPlatform();
-    logger.info('Detected platform:', this.currentPlatform);
+    const platformName = this.platformHandler ? this.platformHandler.getPlatformName() : 'Generic';
+    logger.info('Detected platform:', platformName, '(', this.currentPlatform, ')');
 
     // Listen for messages from background script
     chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
@@ -136,24 +144,38 @@ class ContentScript {
   private async detectAndProcessForm(): Promise<void> {
     logger.time('Form detection');
 
-    const forms = this.formDetector.detectForms();
+    let fields: FormField[] = [];
 
-    if (forms.length === 0) {
-      logger.debug('No forms detected');
-      return;
+    // Use platform-specific handler if available
+    if (this.platformHandler) {
+      logger.info('Using platform-specific handler');
+      fields = this.platformHandler.detectFormFields();
+    } else {
+      // Fallback to generic form detection
+      logger.info('Using generic form detection');
+      const forms = this.formDetector.detectForms();
+
+      if (forms.length === 0) {
+        logger.debug('No forms detected');
+        return;
+      }
+
+      logger.info(`Detected ${forms.length} form(s)`);
+      const form = forms[0];
+      fields = this.formDetector.extractFields(form);
     }
-
-    logger.info(`Detected ${forms.length} form(s)`);
-
-    // For now, process the first form
-    const form = forms[0];
-    const fields = this.formDetector.extractFields(form);
 
     logger.info(`Extracted ${fields.length} fields`);
     logger.timeEnd('Form detection');
 
+    if (fields.length === 0) {
+      logger.debug('No fields extracted');
+      return;
+    }
+
     // Show notification to user
-    this.showDetectionNotification(fields.length);
+    const platformName = this.platformHandler ? this.platformHandler.getPlatformName() : 'form';
+    this.showDetectionNotification(fields.length, platformName);
 
     // Store detected fields
     await this.storeDetectedFields(fields);
@@ -178,7 +200,7 @@ class ContentScript {
   /**
    * Show notification that form was detected
    */
-  private showDetectionNotification(fieldCount: number): void {
+  private showDetectionNotification(fieldCount: number, platformName: string = 'form'): void {
     // Create notification element
     const notification = document.createElement('div');
     notification.id = 'jobflow-notification';
@@ -198,10 +220,10 @@ class ContentScript {
         font-weight: 500;
         animation: slideIn 0.3s ease-out;
       ">
-        ✓ JobFlow detected ${fieldCount} form fields
+        ✓ JobFlow detected ${platformName}
         <br>
         <small style="opacity: 0.9; font-size: 12px;">
-          Click extension icon to fill
+          ${fieldCount} fields • Press Ctrl+Shift+F to fill
         </small>
       </div>
       <style>
@@ -289,30 +311,53 @@ class ContentScript {
     logger.info('Filling form...');
     logger.time('Form fill');
 
-    const forms = this.formDetector.detectForms();
-    if (forms.length === 0) {
-      this.showError('No form found on page');
-      return;
-    }
-
-    const form = forms[0];
-    const fields = this.formDetector.extractFields(form);
-
-    let filledCount = 0;
-
-    for (const field of fields) {
-      const value = this.fieldMapper.mapFieldToValue(field, data);
-
-      if (value !== null && value !== undefined) {
-        const success = await this.fillField(field, value);
-        if (success) filledCount++;
+    // Store user profile for platform handler
+    if (data.profile) {
+      this.userProfile = data.profile;
+      if (this.platformHandler) {
+        this.platformHandler.setUserProfile(data.profile);
       }
     }
 
-    logger.info(`Filled ${filledCount}/${fields.length} fields`);
+    let filledCount = 0;
+    let totalFields = 0;
+
+    // Use platform-specific handler if available
+    if (this.platformHandler) {
+      logger.info('Using platform handler to fill form');
+      const fields = this.platformHandler.detectFormFields();
+      totalFields = fields.length;
+
+      const result = await this.platformHandler.fillAllFields(fields);
+      filledCount = result.filled;
+    } else {
+      // Fallback to generic form filling
+      logger.info('Using generic form filling');
+      const forms = this.formDetector.detectForms();
+
+      if (forms.length === 0) {
+        this.showError('No form found on page');
+        return;
+      }
+
+      const form = forms[0];
+      const fields = this.formDetector.extractFields(form);
+      totalFields = fields.length;
+
+      for (const field of fields) {
+        const value = this.fieldMapper.mapFieldToValue(field, data.profile || data);
+
+        if (value !== null && value !== undefined) {
+          const success = await this.fillField(field, value);
+          if (success) filledCount++;
+        }
+      }
+    }
+
+    logger.info(`Filled ${filledCount}/${totalFields} fields`);
     logger.timeEnd('Form fill');
 
-    this.showSuccess(`Filled ${filledCount} fields!`);
+    this.showSuccess(`✓ Filled ${filledCount}/${totalFields} fields`);
   }
 
   /**
