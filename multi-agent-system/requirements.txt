@@ -26,7 +26,7 @@ alembic==1.13.1
 # Tools and Utilities
 playwright==1.43.0
 beautifulsoup4==4.12.3
-requests==2.31.0
+requests==2.32.4
 aiohttp==3.12.14
 python-dotenv==1.0.1
 
